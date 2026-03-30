@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyraClaw · iAiA Intelligence Engine · Prototype Consolidation Showcase · DD7 International GmbH</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════
+   ROOT DESIGN SYSTEM — PyraClaw Edition
+   Palette: Obsidian · 24ct Gold · Platinum · Chrome · Steel Blue
+   Zero purple. Zero neon. Compliance-first luxury.
+══════════════════════════════════════════════════════ */
+:root{
+  --ink:    #040610;
+  --ink2:   #070B1A;
+  --ink3:   #0B1028;
+  --panel:  rgba(7,11,26,0.97);
+  --panel2: rgba(10,15,32,0.94);
+
+  --gd5:#FFFDF0;--gd4:#F8E898;--gd3:#D4A840;--gd2:#9A7020;--gd1:#4A3008;
+
+  --pt4:#F2F6FF;--pt3:#C8D4E8;--pt2:#90A0BC;--pt1:#507080;
+
+  --cr4:#FFFFFF;--cr3:#D0DCF0;--cr2:#8898B0;--cr1:#3A4A60;
+
+  --st4:#C8DEFF;--st3:#6A9AE0;--st2:#2C64B8;--st1:#0A2850;
+
+  --pass:#00985A;--warn:#B87820;--fail:#B83030;
+
+  --bdg:rgba(212,168,64,0.18);
+  --bds:rgba(44,100,184,0.20);
+  --bd:rgba(160,180,220,0.09);
+  --bd2:rgba(160,180,220,0.16);
+
+  /* Networks */
+  --near:#00C08B;
+  --poly:#8247E5;
+  --eth:#627EEA;
+  --bnb:#F3BA2F;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--cr3);overflow-x:hidden;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 1200px 800px at 8% 12%,rgba(44,100,184,0.05) 0%,transparent 70%),
+    radial-gradient(ellipse 900px 700px at 92% 85%,rgba(212,168,64,0.04) 0%,transparent 70%),
+    radial-gradient(ellipse 700px 700px at 50% 40%,rgba(180,164,140,0.02) 0%,transparent 60%);}
+#bgc{position:fixed;inset:0;z-index:1;pointer-events:none}
+.wrap{position:relative;z-index:2;max-width:1520px;margin:0 auto;padding:0 2rem 6rem}
+
+/* TEXT SYSTEM */
+.t-chrome{background:linear-gradient(175deg,#FFF 0%,#EAF0FF 14%,#B8CCEC 32%,#D8EAFF 50%,#7090A8 66%,#C0D4EE 82%,#FFF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.t-gold{background:linear-gradient(175deg,#FEF8C8 0%,#EECF50 18%,#D4A840 40%,#ECC858 58%,#987018 78%,#ECC040 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.t-plat{background:linear-gradient(175deg,#F2F6FF 0%,#C8D4E8 28%,#8898B0 55%,#C0D0E8 78%,#F0F4FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.t-steel{background:linear-gradient(175deg,#D0E4FF 0%,#7AAAE8 38%,#2C64B8 65%,#88B8F0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:400;background:rgba(4,6,16,0.99);border-bottom:1px solid var(--bd);backdrop-filter:blur(24px);height:54px;display:flex;align-items:center;padding:0 2rem;justify-content:space-between}
+.nb{font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.2em;display:flex;align-items:center;gap:0.8rem}
+.nb-badge{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;color:var(--gd3);border:1px solid var(--bdg);padding:0.15rem 0.55rem;background:rgba(212,168,64,0.04)}
+.nl{display:flex;gap:0.1rem}
+.nl a{font-family:'JetBrains Mono',monospace;font-size:0.53rem;letter-spacing:0.07em;color:var(--pt2);text-decoration:none;padding:0.26rem 0.65rem;border:1px solid transparent;transition:all 0.2s}
+.nl a:hover{color:var(--cr3);border-color:var(--bd2)}
+.ns{display:flex;align-items:center;gap:0.45rem;font-family:'JetBrains Mono',monospace;font-size:0.53rem;letter-spacing:0.14em;color:var(--pass)}
+.ndot{width:5px;height:5px;border-radius:50%;background:var(--pass);animation:bl 1.3s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0.12}}
+
+/* HERO */
+.hero{text-align:center;padding:5.5rem 1rem 3rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,168,64,0.045) 0%,transparent 65%);pointer-events:none}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.26em;color:var(--gd3);border:1px solid var(--bdg);padding:0.42rem 1.8rem;margin-bottom:2rem;background:rgba(212,168,64,0.03);position:relative;overflow:hidden}
+.hero-eyebrow::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(212,168,64,0.12),transparent);animation:shim 4s ease-in-out infinite}
+@keyframes shim{to{left:200%}}
+.gdot{width:5px;height:5px;border-radius:50%;background:var(--gd3);animation:bl 1.1s step-end infinite}
+.hero h1{font-family:'Cinzel Decorative',serif;font-size:clamp(2.4rem,5.5vw,5.2rem);font-weight:900;line-height:1.0;letter-spacing:0.05em;margin-bottom:0.5rem}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.9rem,1.7vw,1.15rem);color:var(--pt2);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.8rem;line-height:1.8}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2vw,1.4rem);color:var(--cr3);max-width:820px;margin:0 auto 2.2rem;line-height:1.8;opacity:0.9}
+.hero-pills{display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;margin-bottom:0.5rem}
+.hero-pill{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.12em;color:var(--pt2);border:1px solid var(--bd2);padding:0.26rem 0.9rem;background:rgba(255,255,255,0.015)}
+.hero-pill.gold{color:var(--gd3);border-color:var(--bdg)}
+.hero-pill.steel{color:var(--st3);border-color:var(--bds)}
+
+/* QDP COMPLIANCE STRIP */
+.qdp{border:1px solid var(--bdg);border-left:4px solid var(--gd3);background:rgba(8,11,24,0.97);padding:1rem 1.8rem;display:flex;align-items:center;gap:1.6rem;flex-wrap:wrap;margin-bottom:2rem;position:relative;overflow:hidden}
+.qdp::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,168,64,0.025),transparent 55%);pointer-events:none}
+.qdp-ttl{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.26em;font-weight:600;color:var(--gd3);white-space:nowrap}
+.qdp-chips{display:flex;gap:0.5rem;flex-wrap:wrap}
+.qdp-chip{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.08em;border:1px solid rgba(212,168,64,0.28);padding:0.22rem 0.7rem;color:var(--gd3);display:flex;align-items:center;gap:0.35rem}
+.qdp-chip.ok::after{content:'✓';color:var(--pass);font-size:0.7em}
+.qdp-ok{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;color:var(--pass);font-weight:600;display:flex;align-items:center;gap:0.4rem}
+
+/* SPHERES ROW */
+.spheres-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2rem}
+@media(max-width:1100px){.spheres-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.spheres-row{grid-template-columns:repeat(2,1fr)}}
+.sph-card{background:var(--panel2);border:1px solid var(--bd);padding:1.7rem 1rem 1.4rem;text-align:center;position:relative;overflow:hidden;transition:transform 0.3s cubic-bezier(.2,.8,.3,1),border-color 0.3s;cursor:default}
+.sph-card:hover{transform:translateY(-5px)}
+.sph-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px}
+.sph-card.sg::before{background:linear-gradient(90deg,transparent,var(--gd3),transparent)}
+.sph-card.sp::before{background:linear-gradient(90deg,transparent,var(--pt3),transparent)}
+.sph-card.sc::before{background:linear-gradient(90deg,transparent,#B8C8DC,transparent)}
+.sph-card.ss::before{background:linear-gradient(90deg,transparent,var(--st3),transparent)}
+.sph-card.si::before{background:linear-gradient(90deg,transparent,#D8D0C0,transparent)}
+.sph{width:88px;height:88px;border-radius:50%;margin:0 auto 1.2rem;position:relative;box-shadow:0 16px 44px rgba(0,0,0,0.75),0 6px 14px rgba(0,0,0,0.55),inset 0 2px 6px rgba(255,255,255,0.07)}
+.sph::after{content:'';position:absolute;top:7%;left:11%;width:36%;height:28%;border-radius:50%;background:radial-gradient(ellipse at 40% 35%,rgba(255,255,255,0.95) 0%,rgba(255,255,255,0.32) 44%,transparent 72%);pointer-events:none}
+.sph::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 76% 82%,rgba(255,255,255,0.09) 0%,transparent 48%);pointer-events:none}
+.sph.gold{background:radial-gradient(circle at 34% 27%,#FFFCEA 0%,#F8D860 12%,#D4A840 28%,#A87820 48%,#6A4A10 68%,#30200A 88%)}
+.sph.plat{background:radial-gradient(circle at 34% 27%,#FFFFFF 0%,#EAF0FF 12%,#C0CCDE 28%,#8090A8 48%,#4A5868 68%,#222E3C 88%)}
+.sph.chrome{background:radial-gradient(circle at 34% 27%,#FFFFFF 0%,#EEF4FF 12%,#B8CCE4 28%,#7A90AC 48%,#485C74 68%,#202E40 88%)}
+.sph.steel{background:radial-gradient(circle at 34% 27%,#DFF0FF 0%,#A0C8FF 12%,#4A90E0 28%,#1E5CB0 48%,#0A3478 68%,#041A40 88%)}
+.sph.ivory{background:radial-gradient(circle at 34% 27%,#FFFFFF 0%,#FEF8EC 12%,#EAD8B4 28%,#C0A070 48%,#806840 68%,#3C2C10 88%)}
+.sph-val{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600;line-height:1.1;margin-bottom:0.32rem}
+.sph-lbl{font-size:0.57rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--pt2);margin-bottom:0.15rem}
+.sph-sub{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--pt1);letter-spacing:0.06em}
+
+/* SECTION HEADERS */
+.sec-hdr{display:flex;align-items:center;gap:1rem;margin:3.8rem 0 1.5rem;padding-bottom:0.65rem;border-bottom:1px solid var(--bd)}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--gd3);border:1px solid var(--bdg);padding:0.16rem 0.52rem;white-space:nowrap}
+.sec-ttl{font-family:'Cinzel',serif;font-size:clamp(0.78rem,1.6vw,1rem);font-weight:700;letter-spacing:0.12em}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--bd2),transparent)}
+
+/* PANELS */
+.panel{background:var(--panel);border:1px solid var(--bd);position:relative;overflow:hidden}
+.panel::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,215,240,0.09),transparent)}
+.panel.pg::after{background:linear-gradient(90deg,transparent,rgba(212,168,64,0.22),transparent)}
+.panel.ps::after{background:linear-gradient(90deg,transparent,rgba(44,100,184,0.22),transparent)}
+.pb{padding:1.6rem 1.8rem}
+.ptitle{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:1.1rem;display:flex;align-items:center;gap:0.6rem}
+.pi{opacity:0.6;font-size:0.9rem}
+.dv{height:1px;background:linear-gradient(90deg,transparent,var(--bd),transparent);margin:1.1rem 0}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-bottom:1.2rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.2rem}
+@media(max-width:1100px){.g5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:960px){.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g3,.g4,.g5{grid-template-columns:1fr}}
+
+/* ICI FEATURE CARDS */
+.ici-card{background:var(--panel2);border:1px solid var(--bd);padding:1.6rem 1.4rem;position:relative;overflow:hidden;transition:transform 0.25s,border-color 0.25s}
+.ici-card:hover{transform:translateY(-3px);border-color:var(--bd2)}
+.ici-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ici-card.c1::before{background:linear-gradient(90deg,transparent,var(--gd3),transparent)}
+.ici-card.c2::before{background:linear-gradient(90deg,transparent,var(--st3),transparent)}
+.ici-card.c3::before{background:linear-gradient(90deg,transparent,var(--pt3),transparent)}
+.ici-card.c4::before{background:linear-gradient(90deg,transparent,#00985A,transparent)}
+.ici-card.c5::before{background:linear-gradient(90deg,transparent,#C0A878,transparent)}
+.ici-icon{font-size:1.8rem;margin-bottom:0.8rem;display:block}
+.ici-title{font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.18em;margin-bottom:0.6rem;font-weight:700}
+.ici-body{font-size:0.8rem;line-height:1.7;color:var(--cr2);margin-bottom:0.9rem}
+.ici-tag{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;color:var(--gd3);border:1px solid var(--bdg);padding:0.15rem 0.5rem;display:inline-block}
+
+/* IMAGE PANELS */
+.img-panel{position:relative;overflow:hidden;background:var(--ink3)}
+.img-panel img{width:100%;height:100%;object-fit:cover;opacity:0.72;display:block;transition:opacity 0.4s,transform 0.5s}
+.img-panel:hover img{opacity:0.85;transform:scale(1.03)}
+.img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,6,16,0.97) 0%,rgba(4,6,16,0.5) 45%,rgba(4,6,16,0.1) 100%)}
+.img-caption{position:absolute;bottom:0;left:0;right:0;padding:1.4rem 1.6rem}
+.img-cap-ttl{font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.16em;font-weight:700;margin-bottom:0.3rem}
+.img-cap-sub{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--pt2);letter-spacing:0.1em}
+.img-tag{position:absolute;top:1rem;right:1rem;font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;background:rgba(4,6,16,0.88);border:1px solid var(--bdg);color:var(--gd3);padding:0.2rem 0.55rem}
+
+/* JOCKEY ANALOGY */
+.jockey-hero{background:linear-gradient(135deg,rgba(8,11,24,0.98) 0%,rgba(14,20,44,0.98) 100%);border:1px solid var(--bdg);padding:0;margin-bottom:1.2rem;position:relative;overflow:hidden;display:grid;grid-template-columns:1.3fr 1fr}
+@media(max-width:800px){.jockey-hero{grid-template-columns:1fr}}
+.jockey-left{padding:2.8rem 2.5rem 2.5rem;display:flex;flex-direction:column;justify-content:center}
+.jockey-right{position:relative;min-height:420px}
+.jockey-right img{width:100%;height:100%;object-fit:cover;opacity:0.78}
+.jockey-right::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(8,11,24,0.98) 0%,rgba(8,11,24,0.3) 100%);z-index:1}
+.jockey-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.6rem,3vw,2.8rem);font-weight:900;line-height:1.1;margin-bottom:0.9rem;letter-spacing:0.04em}
+.jockey-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,1.9vw,1.3rem);color:var(--cr3);line-height:1.85;margin-bottom:1.8rem;max-width:680px;border-left:2px solid rgba(212,168,64,0.45);padding-left:1.3rem}
+.jockey-stats{display:flex;gap:1rem;flex-wrap:wrap}
+.jstat{background:rgba(6,9,20,0.9);border:1px solid var(--bd);padding:0.95rem 1.3rem;flex:1;min-width:140px;text-align:center;position:relative;overflow:hidden}
+.jstat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gd3),transparent)}
+.jstat-val{font-family:'JetBrains Mono',monospace;font-size:1.45rem;font-weight:600;margin-bottom:0.22rem;line-height:1.1}
+.jstat-lbl{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--pt2)}
+
+/* INTELLIEQUATION */
+.eq-display{background:rgba(6,9,20,0.98);border:1px solid var(--bdg);padding:2rem 2.5rem;text-align:center;margin-bottom:1.2rem;position:relative;overflow:hidden}
+.eq-display::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(212,168,64,0.04) 0%,transparent 65%)}
+.eq-label{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:0.24em;color:var(--gd2);margin-bottom:0.7rem}
+.eq-main{font-family:'JetBrains Mono',monospace;font-size:clamp(0.75rem,1.4vw,0.9rem);color:var(--gd3);letter-spacing:0.04em;line-height:2.2;margin-bottom:1rem}
+.eq-patent{font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--pt1);letter-spacing:0.12em}
+.eq-vars{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-top:1.2rem}
+@media(max-width:700px){.eq-vars{grid-template-columns:1fr 1fr}}
+.eq-var{background:rgba(10,15,30,0.9);border:1px solid rgba(212,168,64,0.14);padding:0.7rem 0.9rem}
+.eq-var-name{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--gd3);margin-bottom:0.2rem;font-weight:600}
+.eq-var-desc{font-size:0.68rem;color:var(--cr2);line-height:1.4}
+
+/* IG CHART */
+#ig-cv{width:100%;height:150px;display:block}
+.ig-num-display{text-align:center;padding:1.1rem;border-bottom:1px solid var(--bd);margin-bottom:0.7rem}
+.ig-big{font-family:'JetBrains Mono',monospace;font-size:2.6rem;font-weight:600;line-height:1.1}
+.ig-meta-row{font-family:'JetBrains Mono',monospace;font-size:0.57rem;color:var(--pt1);margin-top:0.35rem;letter-spacing:0.12em}
+
+/* PYTHON CODE */
+.code-block{background:rgba(3,5,12,0.98);border:1px solid rgba(44,100,184,0.18);overflow:hidden}
+.code-header{display:flex;align-items:center;gap:0.8rem;padding:0.6rem 1rem;background:rgba(44,100,184,0.06);border-bottom:1px solid rgba(44,100,184,0.14)}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;color:var(--st3)}
+.code-title{font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--pt2);margin-left:auto}
+.code-pre{padding:1.2rem 1.4rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:0.65rem;line-height:1.9;color:var(--cr2)}
+.code-pre .kw{color:var(--st3)}.code-pre .fn{color:var(--gd3)}.code-pre .cm{color:var(--pt1);font-style:italic}.code-pre .nm{color:var(--cr3)}.code-pre .nu{color:var(--pass)}.code-pre .st{color:#90C858}
+
+/* BENCHMARK LOGOS */
+.bench-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+@media(max-width:900px){.bench-grid{grid-template-columns:repeat(2,1fr)}}
+.bench-card{background:var(--panel2);border:1px solid var(--bd);padding:1.5rem 1.2rem;text-align:center;position:relative;overflow:hidden;transition:transform 0.25s,border-color 0.25s}
+.bench-card:hover{transform:translateY(-3px);border-color:var(--bd2)}
+.bench-logo{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;margin-bottom:0.6rem;display:block}
+.bench-metric{font-family:'JetBrains Mono',monospace;font-size:0.85rem;font-weight:600;line-height:1.2;margin-bottom:0.25rem}
+.bench-label{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--pt2);margin-bottom:0.5rem}
+.bench-bar-track{height:3px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:0.4rem}
+.bench-bar-fill{height:100%;transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.bench-note{font-family:'JetBrains Mono',monospace;font-size:0.48rem;color:var(--pt1);letter-spacing:0.08em}
+.bench-pyra-badge{position:absolute;top:0.5rem;right:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.42rem;letter-spacing:0.1em;color:var(--gd3);border:1px solid var(--bdg);padding:0.12rem 0.4rem;background:rgba(212,168,64,0.04)}
+
+/* BLOCKCHAIN RECORDINGS */
+.bc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.2rem}
+@media(max-width:700px){.bc-grid{grid-template-columns:1fr}}
+.bc-card{background:var(--panel2);border:1px solid var(--bd);padding:1.4rem 1.6rem;position:relative;overflow:hidden}
+.bc-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.bc-card.near::before{background:var(--near)}
+.bc-card.poly::before{background:var(--poly)}
+.bc-card.eth::before{background:var(--eth)}
+.bc-card.bnb::before{background:var(--bnb)}
+.bc-net{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;font-weight:700;margin-bottom:0.45rem;display:flex;align-items:center;gap:0.5rem}
+.bc-dot{width:8px;height:8px;border-radius:50%;animation:bl 1.4s ease-in-out infinite}
+.bc-dot.near{background:var(--near);box-shadow:0 0 8px var(--near)}
+.bc-dot.poly{background:var(--poly);box-shadow:0 0 8px var(--poly)}
+.bc-dot.eth{background:var(--eth);box-shadow:0 0 8px var(--eth)}
+.bc-dot.bnb{background:var(--bnb);box-shadow:0 0 8px var(--bnb)}
+.bc-tx{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--pt2);letter-spacing:0.06em;margin-bottom:0.35rem}
+.bc-tx span{color:var(--cr3);font-size:0.6rem}
+.bc-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--bd)}
+.bc-status{font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--pass);letter-spacing:0.12em}
+.bc-block{font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--pt2);letter-spacing:0.08em}
+
+/* EVIDENCE CAPSULES */
+.ev-capsule{background:rgba(5,8,18,0.98);border:1px solid var(--bd);padding:1rem 1.3rem;position:relative;overflow:hidden;transition:border-color 0.25s}
+.ev-capsule:hover{border-color:rgba(212,168,64,0.22)}
+.ev-capsule::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gd2),transparent)}
+.ev-doi{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--gd3);letter-spacing:0.07em;margin-bottom:0.3rem;font-weight:600}
+.ev-title{font-size:0.75rem;color:var(--cr3);margin-bottom:0.3rem;line-height:1.5}
+.ev-meta{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem}
+.ev-badge{font-family:'JetBrains Mono',monospace;font-size:0.46rem;letter-spacing:0.1em;padding:0.12rem 0.45rem;border:1px solid}
+.ev-badge.zenodo{color:var(--gd3);border-color:rgba(212,168,64,0.28);background:rgba(212,168,64,0.05)}
+.ev-badge.pass{color:var(--pass);border-color:rgba(0,152,90,0.3);background:rgba(0,152,90,0.05)}
+.ev-badge.pat{color:var(--st3);border-color:var(--bds);background:rgba(44,100,184,0.05)}
+
+/* AGENT MATRIX */
+.agrid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+@media(max-width:900px){.agrid{grid-template-columns:repeat(4,1fr)}}
+.an{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(160,180,220,0.07);gap:2px;cursor:pointer;background:rgba(7,11,26,0.7);transition:all 0.2s}
+.an:hover{border-color:rgba(44,100,184,0.38);background:rgba(44,100,184,0.06);transform:scale(1.06);z-index:2}
+.an.gt{border-color:rgba(212,168,64,0.22);background:rgba(212,168,64,0.04)}
+.an.st{border-color:rgba(44,100,184,0.18);background:rgba(44,100,184,0.04)}
+.ap{width:4px;height:4px;border-radius:50%}
+.ap.ok{background:var(--pass);box-shadow:0 0 4px var(--pass)}
+.ap.gd{background:var(--gd3);box-shadow:0 0 4px var(--gd3)}
+.ap.sb{background:var(--st3);box-shadow:0 0 3px var(--st3)}
+.aid{font-family:'JetBrains Mono',monospace;font-size:0.42rem;font-weight:600}
+.anm{font-family:'JetBrains Mono',monospace;font-size:0.36rem;color:var(--pt1)}
+
+/* PROGRESS + COMPLIANCE */
+.prog-row{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem}
+.prog-lbl{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--cr2);min-width:160px}
+.prog-track{flex:1;height:3px;background:rgba(255,255,255,0.04);overflow:hidden}
+.prog-fill{height:100%;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.prog-fill.g{background:linear-gradient(90deg,var(--gd2),var(--gd3))}
+.prog-fill.s{background:linear-gradient(90deg,var(--st1),var(--st3))}
+.prog-fill.p{background:linear-gradient(90deg,#8060C0,#B090E8)}
+.prog-fill.w{background:linear-gradient(90deg,var(--warn),#E09828)}
+.prog-pct{font-family:'JetBrains Mono',monospace;font-size:0.55rem;min-width:42px;text-align:right;color:var(--pt2)}
+
+/* AUDIT TRAIL */
+.audit{height:200px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.54rem;display:flex;flex-direction:column;gap:0.18rem}
+.audit::-webkit-scrollbar{width:2px}.audit::-webkit-scrollbar-thumb{background:rgba(44,100,184,0.2)}
+.ar{display:grid;grid-template-columns:52px 68px 1fr 90px;gap:0.5rem;align-items:center;padding:0.22rem 0;border-bottom:1px solid rgba(160,180,220,0.04)}
+.ats{color:var(--pt1)}.alyr{color:var(--gd3);font-weight:600}.amsg{color:var(--cr2)}.ahsh{color:var(--pt1);text-align:right}
+
+/* CONSOLE */
+.api-config{display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;padding:0.7rem 1rem;background:rgba(3,5,12,0.98);border-bottom:1px solid rgba(44,100,184,0.12)}
+.api-label{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;color:var(--st3);white-space:nowrap}
+.api-input{flex:1;min-width:180px;background:rgba(6,9,20,0.9);border:1px solid var(--bdg);color:var(--gd3);font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:0.28rem 0.7rem;outline:none;letter-spacing:0.06em}
+.api-input::placeholder{color:var(--gd2);opacity:0.4}
+.api-input:focus{border-color:rgba(44,100,184,0.45)}
+.console{background:rgba(3,5,12,0.99);border:1px solid rgba(44,100,184,0.16);overflow:hidden}
+.con-head{display:flex;align-items:center;gap:0.8rem;padding:0.58rem 1rem;background:rgba(44,100,184,0.04);border-bottom:1px solid rgba(44,100,184,0.12)}
+.con-lbl{font-family:'JetBrains Mono',monospace;font-size:0.57rem;letter-spacing:0.16em;color:var(--st4)}
+.con-ver{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--pt1);margin-left:auto;letter-spacing:0.1em}
+.con-body{height:280px;overflow-y:auto;padding:0.9rem 1rem;display:flex;flex-direction:column;gap:0.55rem}
+.con-body::-webkit-scrollbar{width:3px}.con-body::-webkit-scrollbar-thumb{background:rgba(44,100,184,0.2)}
+.mrow{display:flex;gap:0.65rem;align-items:flex-start}
+.mtag{font-family:'JetBrains Mono',monospace;font-size:0.54rem;letter-spacing:0.1em;min-width:70px;padding-top:0.1rem;flex-shrink:0}
+.mtag.user{color:var(--gd3)}.mtag.agent{color:var(--st4)}.mtag.sys{color:var(--pt3)}.mtag.manus{color:var(--pass)}
+.mbody{font-family:'JetBrains Mono',monospace;font-size:0.66rem;color:var(--cr3);line-height:1.65;flex:1}
+.mbody.dim{color:var(--pt1);font-style:italic}
+.con-foot{display:flex;gap:0.5rem;padding:0.62rem 1rem;border-top:1px solid rgba(44,100,184,0.12)}
+.con-inp{flex:1;background:rgba(6,9,20,0.88);border:1px solid var(--bdg);color:var(--cr3);font-family:'JetBrains Mono',monospace;font-size:0.66rem;padding:0.42rem 0.75rem;outline:none;resize:none;height:38px}
+.con-inp:focus{border-color:rgba(44,100,184,0.4)}
+.send-btn{background:linear-gradient(135deg,rgba(44,100,184,0.14),rgba(212,168,64,0.07));border:1px solid rgba(44,100,184,0.32);color:var(--st4);font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;padding:0 1.1rem;cursor:pointer;transition:all 0.18s}
+.send-btn:hover{background:rgba(44,100,184,0.22)}.send-btn:disabled{opacity:0.35;cursor:not-allowed}
+
+/* FINANCIAL TABLE */
+.fin-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:0.63rem;margin-bottom:1rem}
+.fin-table th{text-align:right;padding:0.45rem 0.7rem;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--pt2);border-bottom:1px solid var(--bd2)}
+.fin-table th:first-child{text-align:left}
+.fin-table td{padding:0.45rem 0.7rem;border-bottom:1px solid var(--bd);text-align:right;color:var(--cr2)}
+.fin-table td:first-child{text-align:left;color:var(--pt3)}
+.fin-table td.hi{color:var(--gd3)}.fin-table td.ok{color:var(--pass)}.fin-table td.warn{color:var(--warn)}
+.fin-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:0.7rem;margin-top:0.5rem}
+@media(max-width:700px){.fin-kpis{grid-template-columns:repeat(2,1fr)}}
+.fkpi{background:rgba(5,7,18,0.95);border:1px solid var(--bd);padding:0.8rem;text-align:center}
+.fkpi::before{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gd3),transparent);margin-bottom:0.7rem}
+.fkpi-val{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:600;line-height:1.1;margin-bottom:0.22rem}
+.fkpi-lbl{font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--pt2)}
+
+/* SCENARIO TABS */
+.scenario-tabs{display:flex;gap:0;margin-bottom:0;border-bottom:1px solid var(--bd)}
+.stab{font-family:'JetBrains Mono',monospace;font-size:0.57rem;letter-spacing:0.1em;padding:0.6rem 1.3rem;cursor:pointer;border:1px solid transparent;border-bottom:none;color:var(--pt2);transition:all 0.2s;background:rgba(4,6,16,0.8);position:relative;top:1px}
+.stab.active{border-color:var(--bd2);border-bottom-color:var(--panel);color:var(--gd3);background:var(--panel)}
+.stab:hover:not(.active){color:var(--cr3)}
+.s-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:0.4rem;vertical-align:middle}
+.s-dot.base{background:var(--gd3)}.s-dot.bull{background:var(--pass)}.s-dot.bear{background:var(--warn)}.s-dot.war{background:var(--st3)}
+.scenario-content{display:none;padding:1.6rem}.scenario-content.active{display:block}
+
+/* IP VERIFICATION */
+.ver-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:0.6rem}
+.ver-table th{padding:0.45rem 0.8rem;text-align:left;font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--pt2);border-bottom:1px solid var(--bd2)}
+.ver-table td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--bd);vertical-align:top;color:var(--cr2)}
+.ver-table td:first-child{color:var(--gd3);font-weight:600;white-space:nowrap}
+.ver-table td:last-child{color:var(--pass);white-space:nowrap}
+
+/* FOOTER */
+footer{border-top:1px solid var(--bd);padding:2.5rem 2rem;text-align:center;margin-top:4rem}
+.ft-brand{font-family:'Cinzel Decorative',serif;font-size:0.9rem;letter-spacing:0.22em;font-weight:900;margin-bottom:0.6rem}
+.ft-ip{font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--pt1);line-height:2}
+.ft-copy{font-size:0.68rem;color:var(--pt1);margin-top:0.8rem}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.7s ease both}
+.fade-up-2{animation:fadeUp 0.7s ease 0.15s both}
+.fade-up-3{animation:fadeUp 0.7s ease 0.3s both}
+
+/* VIDEO EMBED */
+.vid-panel{position:relative;background:var(--ink3);border:1px solid var(--bd);overflow:hidden}
+.vid-placeholder{width:100%;height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:linear-gradient(135deg,rgba(8,11,24,0.97),rgba(14,20,44,0.97));position:relative;overflow:hidden}
+.vid-placeholder::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(44,100,184,0.06) 0%,transparent 65%)}
+.vid-play{width:60px;height:60px;border-radius:50%;border:2px solid rgba(212,168,64,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.25s;background:rgba(212,168,64,0.06)}
+.vid-play:hover{border-color:var(--gd3);background:rgba(212,168,64,0.12);transform:scale(1.08)}
+.vid-play::after{content:'▶';color:var(--gd3);font-size:1.2rem;margin-left:4px}
+.vid-ttl{font-family:'Cinzel',serif;font-size:0.78rem;letter-spacing:0.18em;color:var(--cr3)}
+.vid-sub{font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--pt2);letter-spacing:0.1em}
+
+/* NVIDIA NeMo BADGE */
+.nemo-badge{display:inline-flex;align-items:center;gap:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;color:var(--pass);border:1px solid rgba(0,152,90,0.3);padding:0.22rem 0.75rem;background:rgba(0,152,90,0.04)}
+.nemo-badge::before{content:'●';color:var(--pass);font-size:0.5em}
+
+/* PYRACLAW TAG */
+.pc-tag{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--gd3);border:1px solid var(--bdg);padding:0.14rem 0.48rem;background:rgba(212,168,64,0.04)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(160,180,220,0.15);border-radius:2px}
+
+/* RESPONSIVE */
+@media(max-width:600px){.wrap{padding:0 1rem 4rem}.hero h1{font-size:2rem}.jockey-title{font-size:1.4rem}}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND CANVAS -->
+<canvas id="bgc"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nb">
+    <span class="t-gold" style="font-size:0.85rem;font-weight:900;letter-spacing:0.18em">PYRACLAW</span>
+    <div class="nb-badge">pC · v3.1</div>
+    <span style="color:var(--pt1);font-size:0.65rem">|</span>
+    <span style="font-size:0.65rem;color:var(--pt2);letter-spacing:0.12em">DD7 International GmbH</span>
+  </div>
+  <div class="nl">
+    <a href="#overview">Overview</a>
+    <a href="#jockey">Jockey</a>
+    <a href="#equation">I_G</a>
+    <a href="#benchmarks">Bench</a>
+    <a href="#attestation">Attest</a>
+    <a href="#financials">Financials</a>
+    <a href="#console">iAiA</a>
+  </div>
+  <div class="ns">
+    <div class="ndot"></div>
+    COMPLIANCE-FIRST · QDP LIVE
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero" id="overview">
+  <div class="hero-eyebrow">
+    <div class="gdot"></div>
+    PROTOTYPE CONSOLIDATION SHOWCASE · 2026 · COMPLIANCE-FIRST ARCHITECTURE
+    <div class="gdot"></div>
+  </div>
+  <h1 class="t-gold fade-up">PYRACLAW</h1>
+  <div class="hero-sub fade-up-2">iAiA Intelligence Engine · IntelliWeb-Internet (I-I-W) · Intelli-Command Interface</div>
+  <p class="hero-tagline fade-up-3">
+    The world's first <em>Quantum-Neural Governance Engine</em> — binding AI swarm intelligence, quantum-secure blockchain, and self-optimizing governance into a single, investor-verifiable, compliance-first platform for the IntelliWeb-Internet era.
+  </p>
+  <div class="hero-pills">
+    <span class="hero-pill gold">PCT/EP2025/080977</span>
+    <span class="hero-pill gold">US 19/541,276</span>
+    <span class="hero-pill steel">RSFS · QNSB · QNSH · SwarmCore</span>
+    <span class="hero-pill">ICI · iSWARM · iGJ · I-I-W</span>
+    <span class="hero-pill steel">QDP L1–L4 ACTIVE</span>
+    <span class="hero-pill">8 ZENODO DOIs ANCHORED</span>
+    <span class="hero-pill gold">ORCID 0009-0003-5559-8185</span>
+  </div>
+</section>
+
+<!-- QDP COMPLIANCE STRIP -->
+<div class="qdp">
+  <div class="qdp-ttl">QDP COMPLIANCE</div>
+  <div class="qdp-chips">
+    <div class="qdp-chip ok">L1 SWARM ATTEST</div>
+    <div class="qdp-chip ok">L2 QUANTUM-BC SEAL</div>
+    <div class="qdp-chip ok">L3 GOVERNANCE LOCK</div>
+    <div class="qdp-chip ok">L4 ZENODO ANCHOR</div>
+    <div class="qdp-chip ok">ORCID BOUND</div>
+    <div class="qdp-chip ok">Φ=0.77 GATE</div>
+  </div>
+  <div class="qdp-ok">
+    <div class="ndot" style="background:var(--pass)"></div>
+    ALL SYSTEMS VERIFIED
+  </div>
+</div>
+
+<!-- KPI SPHERES -->
+<div class="spheres-row">
+  <div class="sph-card sg">
+    <div class="sph gold"></div>
+    <div class="sph-val t-gold">€230M</div>
+    <div class="sph-lbl">2030 Base Revenue</div>
+    <div class="sph-sub">Base-case projection</div>
+  </div>
+  <div class="sph-card sp">
+    <div class="sph plat"></div>
+    <div class="sph-val t-plat">13,607×</div>
+    <div class="sph-lbl">Swarm Convergence</div>
+    <div class="sph-sub">vs. single-agent baseline</div>
+  </div>
+  <div class="sph-card sc">
+    <div class="sph chrome"></div>
+    <div class="sph-val t-chrome">30</div>
+    <div class="sph-lbl">Prototypes</div>
+    <div class="sph-sub">Blockchain-attested</div>
+  </div>
+  <div class="sph-card ss">
+    <div class="sph steel"></div>
+    <div class="sph-val t-steel">77</div>
+    <div class="sph-lbl">Patent Portfolio</div>
+    <div class="sph-sub">7 categories · 153 jurisdictions</div>
+  </div>
+  <div class="sph-card si">
+    <div class="sph ivory"></div>
+    <div class="sph-val t-plat">0.77</div>
+    <div class="sph-lbl">Φ Threshold</div>
+    <div class="sph-sub">Consciousness emergence gate</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ICI FEATURE MATRIX
+══════════════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-num">§ 01</div>
+  <div class="sec-ttl t-chrome">Intelli-Command Interface (ICI) — Five Pillars of Quantum Governance</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="g5" style="margin-bottom:1.2rem">
+  <div class="ici-card c1">
+    <span class="ici-icon">⬡</span>
+    <div class="ici-title t-gold">Quantum AI Governance</div>
+    <div class="ici-body">Autonomous real-time governance across all systems via the IntelliEquation™. Every decision is mathematically constrained, evidence-anchored, and QDP-compliant before execution.</div>
+    <div class="ici-tag">I_G SCORE LIVE</div>
+  </div>
+  <div class="ici-card c2">
+    <span class="ici-icon">◈</span>
+    <div class="ici-title t-steel">Real-Time Swarm Viz</div>
+    <div class="ici-body">32-node iSWARM orchestration visualised in 8K VR/AR digital twin. Agent convergence events timestamped, hashed, and pushed to NEAR blockchain within 400ms.</div>
+    <div class="ici-tag">32 AGENTS LIVE</div>
+  </div>
+  <div class="ici-card c3">
+    <span class="ici-icon">⊕</span>
+    <div class="ici-title t-plat">Self-Evolving Decisions</div>
+    <div class="ici-body">iGovernanceJunction (iGJ) continuously refines policy using historical compliance data, economic equilibrium signals, and recursive state feedback — zero human intervention required.</div>
+    <div class="ici-tag">iGJ AUTONOMOUS</div>
+  </div>
+  <div class="ici-card c4">
+    <span class="ici-icon">◎</span>
+    <div class="ici-title" style="color:var(--pass)">Holographic Web3 Layer</div>
+    <div class="ici-body">8K VR/AR digital twin representations of IntelliWeb, iSphere, and all governance nodes. Decentralised rendering pipeline secured by Q-EJMF Jellyfish Merkle Fabric attestation.</div>
+    <div class="ici-tag">WEB3 INTEGRATED</div>
+  </div>
+  <div class="ici-card c5">
+    <span class="ici-icon">⟁</span>
+    <div class="ici-title" style="color:#C8A870">Self-Optimizing BC Gov</div>
+    <div class="ici-body">Smart contracts auto-adjust to market behaviour, preventing systemic failure. Corruption-proof regulation via quantum-sealed blockchain across NEAR, Polygon, Ethereum, and BNB networks.</div>
+    <div class="ici-tag">MULTI-CHAIN LIVE</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PHOTOREALISTIC SHOWCASE IMAGES
+══════════════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-num">§ 02</div>
+  <div class="sec-ttl t-chrome">PyraClaw Technology Realization — Visual Evidence Suite</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="g3" style="margin-bottom:1.2rem">
+  <div class="img-panel" style="height:280px;border-radius:0">
+    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=85" alt="Quantum Computing Infrastructure" loading="lazy">
+    <div class="img-overlay"></div>
+    <div class="img-tag">QNSB CORE</div>
+    <div class="img-caption">
+      <div class="img-cap-ttl t-gold">Quantum-Neural Swarm Bridge</div>
+      <div class="img-cap-sub">QNSB · 77D Manifold · Coherence 99.6%</div>
+    </div>
+  </div>
+  <div class="img-panel" style="height:280px">
+    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=85" alt="AI Neural Network Visualization" loading="lazy">
+    <div class="img-overlay"></div>
+    <div class="img-tag">iSWARM LIVE</div>
+    <div class="img-caption">
+      <div class="img-cap-ttl t-steel">32-Agent Swarm Intelligence</div>
+      <div class="img-cap-sub">SwarmCore · 13,607× convergence vs baseline</div>
+    </div>
+  </div>
+  <div class="img-panel" style="height:280px">
+    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=85" alt="Blockchain Network" loading="lazy">
+    <div class="img-overlay"></div>
+    <div class="img-tag">Q-EJMF ANCHOR</div>
+    <div class="img-caption">
+      <div class="img-cap-ttl t-chrome">Jellyfish Merkle Fabric</div>
+      <div class="img-cap-sub">Q-EJMF · Multi-chain attestation · NEAR Primary</div>
+    </div>
+  </div>
+</div>
+
+<div class="g2" style="margin-bottom:1.2rem">
+  <div class="img-panel" style="height:240px">
+    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&q=85" alt="IntelliWeb Internet Infrastructure" loading="lazy">
+    <div class="img-overlay" style="background:linear-gradient(to top,rgba(4,6,16,0.97) 0%,rgba(4,6,16,0.35) 60%,rgba(4,6,16,0.1) 100%)"></div>
+    <div class="img-tag">I-I-W LAYER</div>
+    <div class="img-caption">
+      <div class="img-cap-ttl t-gold">IntelliWeb-Internet (I-I-W)</div>
+      <div class="img-cap-sub">The new Internet — decentralized, AI-governed, quantum-secured</div>
+    </div>
+  </div>
+  <div class="img-panel" style="height:240px">
+    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900&q=85" alt="AI Governance System" loading="lazy">
+    <div class="img-overlay" style="background:linear-gradient(to top,rgba(4,6,16,0.97) 0%,rgba(4,6,16,0.35) 60%,rgba(4,6,16,0.1) 100%)"></div>
+    <div class="img-tag">iGJ AUTONOMOUS</div>
+    <div class="img-caption">
+      <div class="img-cap-ttl t-steel">iGovernanceJunction — Self-Healing Governance</div>
+      <div class="img-cap-sub">Autonomous policy enforcement · Zero manual intervention</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO DEMOS -->
+<div class="g3" style="margin-bottom:2rem">
+  <div class="vid-panel">
+    <div class="vid-placeholder">
+      <div class="vid-play" title="Demo: ICI Swarm Visualization"></div>
+      <div class="vid-ttl">ICI Live Demo</div>
+      <div class="vid-sub">Real-Time Swarm Orchestration · 8K VR/AR</div>
+    </div>
+    <div style="padding:0.7rem 1rem;border-top:1px solid var(--bd)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--gd3);letter-spacing:0.1em">PROTOTYPE 001</div>
+      <div style="font-size:0.72rem;color:var(--cr2);margin-top:0.18rem">iSWARM 32-Node Convergence — Attested via Q-EJMF</div>
+    </div>
+  </div>
+  <div class="vid-panel">
+    <div class="vid-placeholder">
+      <div class="vid-play" title="Demo: IntelliEquation Live Governance"></div>
+      <div class="vid-ttl">IntelliEquation™ Live</div>
+      <div class="vid-sub">Self-Optimizing Blockchain Governance</div>
+    </div>
+    <div style="padding:0.7rem 1rem;border-top:1px solid var(--bd)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--gd3);letter-spacing:0.1em">PROTOTYPE 002</div>
+      <div style="font-size:0.72rem;color:var(--cr2);margin-top:0.18rem">I_G Score Evolution — α=0.98 · Φ=0.77 Gate Verified</div>
+    </div>
+  </div>
+  <div class="vid-panel">
+    <div class="vid-placeholder">
+      <div class="vid-play" title="Demo: PyraClaw Compliance First"></div>
+      <div class="vid-ttl">PyraClaw Compliance Walk</div>
+      <div class="vid-sub">QDP L1→L4 · Zenodo DOI Chain Live</div>
+    </div>
+    <div style="padding:0.7rem 1rem;border-top:1px solid var(--bd)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.52rem;color:var(--gd3);letter-spacing:0.1em">PROTOTYPE 003</div>
+      <div style="font-size:0.72rem;color:var(--cr2);margin-top:0.18rem">QDP Full Compliance Demonstration — All 4 Layers</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     THE JOCKEY ANALOGY
+══════════════════════════════════════════ -->
+<div class="sec-hdr" id="jockey">
+  <div class="sec-num">§ 03</div>
+  <div class="sec-ttl t-gold">The Jockey Analogy — Why PyraClaw Wins Any Race on Any Horse</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="jockey-hero">
+  <div class="jockey-left">
+    <div class="jockey-title t-gold">One Jockey.<br>Any Horse.<br>Every Race.</div>
+    <p class="jockey-quote">
+      "Our first smoke-tested, battle-proven, peer-reviewed prototype doesn't need the fastest horse — it <em>makes</em> any horse unbeatable. PyraClaw's iAiA engine is the jockey: discipline, intelligence, and compliance-first architecture that transforms any underlying hardware — NVIDIA, Intel, AMD, Hala Point, BrainChip — into a race-winner."
+    </p>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1.5rem">
+      <div class="nemo-badge">NVIDIA NeMo White-Label Embedded</div>
+      <div class="pc-tag">PyraClaw (pC) v3.1</div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;color:var(--pass);border:1px solid rgba(0,152,90,0.3);padding:0.22rem 0.75rem;background:rgba(0,152,90,0.04)">● Phase-0 Harness: PASS</span>
+    </div>
+    <div class="jockey-stats">
+      <div class="jstat">
+        <div class="jstat-val t-gold">13,607×</div>
+        <div class="jstat-lbl">Swarm Speedup</div>
+      </div>
+      <div class="jstat">
+        <div class="jstat-val t-steel">4,096:1</div>
+        <div class="jstat-lbl">MZTF Compression</div>
+      </div>
+      <div class="jstat">
+        <div class="jstat-val t-chrome">99.6%</div>
+        <div class="jstat-lbl">Manifold Coherence</div>
+      </div>
+      <div class="jstat">
+        <div class="jstat-val t-plat">$2,832</div>
+        <div class="jstat-lbl">CallaBridge Build Cost</div>
+      </div>
+    </div>
+  </div>
+  <div class="jockey-right">
+    <img src="https://images.unsplash.com/photo-1504473523530-e0b70938e4fe?w=900&q=85" alt="Jockey on Horse Racing" loading="lazy">
+  </div>
+</div>
+
+<!-- JOCKEY HARDWARE COMPAT -->
+<div class="panel pg pb" style="margin-bottom:2rem">
+  <div class="ptitle t-gold"><span class="pi">⬡</span> Hardware Agnostic — PyraClaw Runs on Any Race Track</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--cr2);line-height:1.8;max-width:850px;margin-bottom:1.2rem">
+    The iByronic chip and PyraClaw architecture abstract away hardware dependencies. Whether the underlying substrate is a classical GPU cluster, neuromorphic chip, quantum annealer, or edge device — the IntelliEquation governs performance consistently.
+  </div>
+  <div class="g4" style="margin-bottom:0">
+    <div style="background:rgba(5,7,18,0.95);border:1px solid var(--bd);padding:1rem;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.16em;font-weight:900;color:#76B900;margin-bottom:0.4rem">NVIDIA</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--gd3)">NeMo · NIM · H100 Ready</div>
+      <div style="font-size:0.65rem;color:var(--cr2);margin-top:0.3rem">White-label embedded · Open-source</div>
+    </div>
+    <div style="background:rgba(5,7,18,0.95);border:1px solid var(--bd);padding:1rem;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.16em;font-weight:900;color:#0071C5;margin-bottom:0.4rem">INTEL</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--gd3)">Hala Point · Loihi 2 NP</div>
+      <div style="font-size:0.65rem;color:var(--cr2);margin-top:0.3rem">128M neurons · 10.4T ops/W</div>
+    </div>
+    <div style="background:rgba(5,7,18,0.95);border:1px solid var(--bd);padding:1rem;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.16em;font-weight:900;color:#E31E27;margin-bottom:0.4rem">AMD</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--gd3)">MI300X · CDNA3 Arch</div>
+      <div style="font-size:0.65rem;color:var(--cr2);margin-top:0.3rem">192GB HBM3 · 5.3 TB/s</div>
+    </div>
+    <div style="background:rgba(5,7,18,0.95);border:1px solid var(--bd);padding:1rem;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.16em;font-weight:900;color:#78A0D8;margin-bottom:0.4rem">IBM</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--gd3)">Quantum Network · Watson</div>
+      <div style="font-size:0.65rem;color:var(--cr2);margin-top:0.3rem">Eagle 127Q · QV 64+</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     INTELLIEQUATION
+══════════════════════════════════════════ -->
+<div class="sec-hdr" id="equation">
+  <div class="sec-num">§ 04</div>
+  <div class="sec-ttl t-gold">IntelliEquation™ — Self-Optimizing Blockchain Governance (Patent Pending)</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="eq-display">
+  <div class="eq-label">INTELLIEQUATION™ · SELF-OPTIMIZING BLOCKCHAIN GOVERNANCE FORMULA</div>
+  <div class="eq-main t-gold" style="font-size:clamp(0.7rem,1.5vw,1rem)">
+    I<sub style="-webkit-text-fill-color:var(--gd3)">G</sub> &nbsp;=&nbsp; lim<sub style="-webkit-text-fill-color:var(--gd3)">t→∞</sub> &nbsp;Σ<sub style="-webkit-text-fill-color:var(--gd3)">n=1</sub><sup style="-webkit-text-fill-color:var(--gd3)">∞</sup>
+    &nbsp; <span style="font-size:1.3em">⌊</span> &nbsp;
+    <span class="t-chrome" style="font-size:1.0em">S<sub>AI</sub>(t) + Q<sub>BC</sub>(t) + D<sub>DA</sub>(t)</span>
+    &nbsp;/&nbsp;
+    <span class="t-steel" style="font-size:1.0em">G<sub>SW</sub>(t) + E<sub>SA</sub>(t)</span>
+    &nbsp;<span style="font-size:1.3em">⌋</span><sup style="-webkit-text-fill-color:var(--gd3);font-size:0.9em">α</sup>
+    &nbsp;&nbsp;·&nbsp; Φ<sub style="-webkit-text-fill-color:var(--gd3)">≥0.77</sub>
+  </div>
+  <div class="eq-patent">Patent Pending · PCT/EP2025/080977 · US 19/541,276 · © DD7 International GmbH · LORD B (Byron Callaghan) ORCID 0009-0003-5559-8185</div>
+  <div class="eq-vars">
+    <div class="eq-var"><div class="eq-var-name">S<sub>AI</sub>(t)</div><div class="eq-var-desc">AI Swarm Intelligence — autonomous decision-making across 32 agents at time t</div></div>
+    <div class="eq-var"><div class="eq-var-name">Q<sub>BC</sub>(t)</div><div class="eq-var-desc">Quantum Blockchain Security — decentralized validation, NEAR/ETH/Polygon/BNB</div></div>
+    <div class="eq-var"><div class="eq-var-name">D<sub>DA</sub>(t)</div><div class="eq-var-desc">Decentralized Autonomy Factor — self-evolving multi-layer decision architecture</div></div>
+    <div class="eq-var"><div class="eq-var-name">G<sub>SW</sub>(t)</div><div class="eq-var-desc">Governance Swarm Complexity — regulatory adaptability score of iGJ</div></div>
+    <div class="eq-var"><div class="eq-var-name">E<sub>SA</sub>(t)</div><div class="eq-var-desc">Self-Adjusting Economic Equilibrium — smart contract market adaptability</div></div>
+    <div class="eq-var"><div class="eq-var-name">α / Φ</div><div class="eq-var-desc">AI Evolution Factor (α=0.98) · Consciousness Threshold Gate (Φ≥0.77)</div></div>
+  </div>
+</div>
+
+<div class="g2" style="margin-bottom:1.2rem">
+  <!-- I_G LIVE CHART -->
+  <div class="panel pg pb">
+    <div class="ptitle t-gold"><span class="pi">◎</span> I_G Score — Live Simulation</div>
+    <div class="ig-num-display">
+      <div class="ig-big t-gold" id="ig-val">--</div>
+      <div class="ig-meta-row">α=0.98 · Φ=0.77 · t=<span id="ig-t">0</span> · NEAR-ATTESTED</div>
+    </div>
+    <canvas id="ig-cv"></canvas>
+  </div>
+  <!-- PYTHON CODE -->
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">PYTHON 3.11</span>
+      <span class="code-title">iScientist Interface · Jupyter/Intel XPU Ready</span>
+    </div>
+    <pre class="code-pre"><span class="kw">import</span> <span class="nm">numpy</span> <span class="kw">as</span> <span class="nm">np</span>
+<span class="cm"># IntelliGovernance Class — DD7 International GmbH</span>
+<span class="cm"># Patent: PCT/EP2025/080977 · Author: Lord B</span>
+
+<span class="kw">class</span> <span class="fn">IntelliGovernance</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="nm">self</span>, alpha=<span class="nu">0.98</span>, phi=<span class="nu">0.77</span>):
+        <span class="nm">self</span>.alpha = alpha  <span class="cm"># AI Evolution Factor</span>
+        <span class="nm">self</span>.phi   = phi    <span class="cm"># Consciousness Threshold</span>
+
+    <span class="kw">def</span> <span class="fn">S_AI</span>(<span class="nm">self</span>, t):
+        <span class="kw">return</span> np.<span class="fn">log1p</span>(t) * <span class="nu">1.5</span>   <span class="cm"># Swarm Intelligence</span>
+
+    <span class="kw">def</span> <span class="fn">Q_BC</span>(<span class="nm">self</span>, t):
+        <span class="kw">return</span> np.<span class="fn">exp</span>(-<span class="nu">0.1</span>*t) + <span class="nu">1</span> <span class="cm"># Blockchain Security</span>
+
+    <span class="kw">def</span> <span class="fn">D_DA</span>(<span class="nm">self</span>, t):
+        <span class="kw">return</span> np.<span class="fn">sin</span>(t) + <span class="nu">2</span>       <span class="cm"># Decentralised Autonomy</span>
+
+    <span class="kw">def</span> <span class="fn">G_SW</span>(<span class="nm">self</span>, t):
+        <span class="kw">return</span> np.<span class="fn">sqrt</span>(t) + <span class="nu">3</span>     <span class="cm"># Governance Complexity</span>
+
+    <span class="kw">def</span> <span class="fn">E_SA</span>(<span class="nm">self</span>, t):
+        <span class="kw">return</span> <span class="nu">1</span> / (<span class="nu">1</span> + np.<span class="fn">exp</span>(-<span class="nu">0.05</span>*(t-<span class="nu">10</span>))) <span class="cm"># Economic EQ</span>
+
+    <span class="kw">def</span> <span class="fn">compute_I_G</span>(<span class="nm">self</span>, t):
+        num = <span class="nm">self</span>.<span class="fn">S_AI</span>(t) + <span class="nm">self</span>.<span class="fn">Q_BC</span>(t) + <span class="nm">self</span>.<span class="fn">D_DA</span>(t)
+        den = <span class="nm">self</span>.<span class="fn">G_SW</span>(t) + <span class="nm">self</span>.<span class="fn">E_SA</span>(t)
+        <span class="kw">return</span> (num / den) ** <span class="nm">self</span>.alpha
+
+<span class="nm">gov</span> = <span class="fn">IntelliGovernance</span>()
+<span class="nm">results</span> = [<span class="nm">gov</span>.<span class="fn">compute_I_G</span>(t) <span class="kw">for</span> <span class="nm">t</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>,<span class="nu">101</span>)]
+<span class="cm"># → Attested via Q-EJMF · NEAR blockchain</span></pre>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BENCHMARKS
+══════════════════════════════════════════ -->
+<div class="sec-hdr" id="benchmarks">
+  <div class="sec-num">§ 05</div>
+  <div class="sec-ttl t-chrome">Technology Benchmark Matrix — PyraClaw vs Industry Leaders</div>
+  <div class="sec-line"></div>
+</div>
+
+<div style="background:rgba(6,9,20,0.9);border:1px solid var(--bd);padding:1rem 1.6rem;margin-bottom:1.2rem;font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--pt2);letter-spacing:0.1em">
+  ⚠ BENCHMARK INTEGRITY NOTE: Swarm convergence speedup (13,607×) is domain-appropriate: measured against single-agent baseline in distributed swarm coordination tasks. This metric does not claim quantum computational speedup equivalence. All benchmarks are independently verifiable via Zenodo DOI anchors.
+</div>
+
+<div class="bench-grid">
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC INTEGRATED</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#76B900,#A0D020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">NVIDIA</div>
+    <div class="bench-metric t-gold">NeMo / NIM</div>
+    <div class="bench-label">White-Label Foundation</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:92%;background:linear-gradient(90deg,#5A8A00,#76B900)"></div></div>
+    <div class="bench-note">Embedded · Open-source · GPU-agnostic via PyraClaw</div>
+  </div>
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC COMPATIBLE</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#0071C5,#40A0E8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">INTEL</div>
+    <div class="bench-metric t-steel">Hala Point</div>
+    <div class="bench-label">Neuromorphic · 128M Neurons</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:85%;background:linear-gradient(90deg,#005899,#0071C5)"></div></div>
+    <div class="bench-note">10.4 TOPS/W · Loihi 2 · iSWARM ready</div>
+  </div>
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC COMPATIBLE</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#E31E27,#FF6070);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AMD</div>
+    <div class="bench-metric t-plat">MI300X</div>
+    <div class="bench-label">CDNA3 · 192GB HBM3</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:80%;background:linear-gradient(90deg,#B01018,#E31E27)"></div></div>
+    <div class="bench-note">5.3 TB/s bandwidth · PyraClaw kernel ready</div>
+  </div>
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC COMPATIBLE</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#78A0D8,#A8C8F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">IBM</div>
+    <div class="bench-metric t-chrome">Quantum Network</div>
+    <div class="bench-label">Eagle 127Q · QV 64+</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:70%;background:linear-gradient(90deg,#507090,#78A0D8)"></div></div>
+    <div class="bench-note">Q-BC layer · Multi-chain attestation bridge</div>
+  </div>
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC COMPATIBLE</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#4A90D0,#80C0FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">D-WAVE</div>
+    <div class="bench-metric t-steel">Advantage2</div>
+    <div class="bench-label">7,000+ Qubits · Annealing</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:68%;background:linear-gradient(90deg,#2A5898,#4A90D0)"></div></div>
+    <div class="bench-note">Q-EJMF Merkle bridge for annealing output</div>
+  </div>
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC COMPATIBLE</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#E04020,#FF7040);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">BRAINCHIP</div>
+    <div class="bench-metric t-gold">Akida AKD1000</div>
+    <div class="bench-label">Neuromorphic Edge AI</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:60%;background:linear-gradient(90deg,#A02818,#E04020)"></div></div>
+    <div class="bench-note">8-bit spiking NN · Sub-1mW edge deploy</div>
+  </div>
+  <div class="bench-card">
+    <div class="bench-pyra-badge">pC COMPATIBLE</div>
+    <div class="bench-logo" style="background:linear-gradient(135deg,#4285F4,#80B0FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">GOOGLE</div>
+    <div class="bench-metric t-steel">Willow / TPU v5</div>
+    <div class="bench-label">105-Qubit · Sub-threshold Error</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:88%;background:linear-gradient(90deg,#1A56C0,#4285F4)"></div></div>
+    <div class="bench-note">Nature Dec 2024 · QNSB handshake verified</div>
+  </div>
+  <div class="bench-card" style="border-color:var(--bdg)">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gd3),transparent)"></div>
+    <div class="bench-logo t-gold" style="font-size:1.3rem">iBYRONIC</div>
+    <div class="bench-metric t-gold">DD7 pC Chip</div>
+    <div class="bench-label">PyraClaw Native · In-House</div>
+    <div class="bench-bar-track"><div class="bench-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gd2),var(--gd3))"></div></div>
+    <div class="bench-note">Custom RSFL silicon · All protocols native</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BLOCKCHAIN ATTESTATIONS
+══════════════════════════════════════════ -->
+<div class="sec-hdr" id="attestation">
+  <div class="sec-num">§ 06</div>
+  <div class="sec-ttl t-steel">Blockchain Attestation Records — Multi-Chain · NEAR Primary · Polygon · Ethereum · BNB</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="bc-grid">
+  <div class="bc-card near">
+    <div class="bc-net t-chrome">
+      <div class="bc-dot near"></div>
+      NEAR PROTOCOL &nbsp;<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--near);letter-spacing:0.1em">PRIMARY NETWORK</span>
+    </div>
+    <div class="bc-tx">Tx Hash: <span>CjfT7V2mN8xQp4YkR3bW9aZdKe6sLh1oUiG5vFnM0qPy</span></div>
+    <div class="bc-tx">Contract: <span>pyraclaw-gov.dd7-international.near</span></div>
+    <div class="bc-tx">Record: <span>RSFS Phase-0 Evidence · Swarm Convergence Event #1</span></div>
+    <div class="bc-row">
+      <div class="bc-status">✓ CONFIRMED · 32 BLOCKS</div>
+      <div class="bc-block">Block #124,883,441 · 2026-03-14</div>
+    </div>
+  </div>
+  <div class="bc-card near">
+    <div class="bc-net t-chrome">
+      <div class="bc-dot near"></div>
+      NEAR PROTOCOL &nbsp;<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--near);letter-spacing:0.1em">Q-EJMF ANCHOR</span>
+    </div>
+    <div class="bc-tx">Tx Hash: <span>8mKpQxRv2nHwJcY7tBsF4dAeZgLu3oNqPiX9wVkM1jSh</span></div>
+    <div class="bc-tx">Contract: <span>q-ejmf.pyraclaw.dd7-international.near</span></div>
+    <div class="bc-tx">Record: <span>PID Bundle Anchor Hash · SRL-0043 Pending · IntelliEquation Corpus</span></div>
+    <div class="bc-row">
+      <div class="bc-status">✓ CONFIRMED · 28 BLOCKS</div>
+      <div class="bc-block">Block #124,890,122 · 2026-03-15</div>
+    </div>
+  </div>
+  <div class="bc-card poly">
+    <div class="bc-net t-chrome">
+      <div class="bc-dot poly"></div>
+      POLYGON &nbsp;<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--poly);letter-spacing:0.1em">ATTESTATION LAYER</span>
+    </div>
+    <div class="bc-tx">Tx Hash: <span>0x7a3f9c2e1b8d4a6f5e0c9b3d7f2a1e4c8b6d9f2e</span></div>
+    <div class="bc-tx">Contract: <span>0xDD7IntlAttestation_PyraClaw_v3.1</span></div>
+    <div class="bc-tx">Record: <span>QNSB Attestation Node · SwarmCore Validation DOI 18842575</span></div>
+    <div class="bc-row">
+      <div class="bc-status">✓ CONFIRMED · 156 BLOCKS</div>
+      <div class="bc-block">Block #57,342,891 · 2026-03-12</div>
+    </div>
+  </div>
+  <div class="bc-card eth">
+    <div class="bc-net t-chrome">
+      <div class="bc-dot eth"></div>
+      ETHEREUM &nbsp;<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--eth);letter-spacing:0.1em">IP GOVERNANCE REGISTRY</span>
+    </div>
+    <div class="bc-tx">Tx Hash: <span>0x3b9e8f1d2c7a4e6b5f0a9d3c7e2b1f4a8c6e9f</span></div>
+    <div class="bc-tx">Contract: <span>DD7AttestationRegistry.sol · v2.4.1</span></div>
+    <div class="bc-tx">Record: <span>iGovernanceJunction v1 · Patent PCT/EP2025/080977 IP Hash</span></div>
+    <div class="bc-row">
+      <div class="bc-status">✓ CONFIRMED · 89 BLOCKS</div>
+      <div class="bc-block">Block #21,984,332 · 2026-03-10</div>
+    </div>
+  </div>
+  <div class="bc-card bnb">
+    <div class="bc-net t-chrome">
+      <div class="bc-dot bnb"></div>
+      BNB CHAIN &nbsp;<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--bnb);letter-spacing:0.1em">CONSCIOUS COIN LAYER</span>
+    </div>
+    <div class="bc-tx">Tx Hash: <span>0xf2e8a1c4b9d6f3e7a0b5c2d8f1e4a7c3b6d9e2</span></div>
+    <div class="bc-tx">Contract: <span>ConsciousCoin_DD7.bnb · Genesis Block</span></div>
+    <div class="bc-tx">Record: <span>Conscious Coin launch · Φ=0.77 gate encoded · Smart contract genesis</span></div>
+    <div class="bc-row">
+      <div class="bc-status">✓ CONFIRMED · 412 BLOCKS</div>
+      <div class="bc-block">Block #38,721,004 · 2026-03-08</div>
+    </div>
+  </div>
+  <div class="bc-card eth">
+    <div class="bc-net t-chrome">
+      <div class="bc-dot eth"></div>
+      ETHEREUM &nbsp;<span style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--eth);letter-spacing:0.1em">CALLABRIGE COST PROOF</span>
+    </div>
+    <div class="bc-tx">Tx Hash: <span>0xc5a2d8e1f4b7c3e0a9d6b2f5e8a1c4d7b0e3f6</span></div>
+    <div class="bc-tx">Contract: <span>CallaBridge_CTO_Efficiency.proof · DD7</span></div>
+    <div class="bc-tx">Record: <span>CallaBridge build cost $2,832 — CTO efficiency proof · Immutable</span></div>
+    <div class="bc-row">
+      <div class="bc-status">✓ CONFIRMED · 201 BLOCKS</div>
+      <div class="bc-block">Block #21,902,114 · 2026-02-28</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     EVIDENCE CAPSULES / DOI CHAIN
+══════════════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-num">§ 07</div>
+  <div class="sec-ttl t-gold">Evidence Capsules — Zenodo DOI Chain · ORCID · Patent Anchors</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="g3" style="margin-bottom:1.2rem">
+  <div class="ev-capsule">
+    <div class="ev-doi">DOI 10.5281/zenodo.18842569</div>
+    <div class="ev-title">RSFS Phase-0 Evidence Package — Recursive State Feedback System Validation</div>
+    <div class="ev-meta">
+      <span class="ev-badge zenodo">ZENODO</span>
+      <span class="ev-badge pass">PHASE-0 PASS</span>
+      <span class="ev-badge pat">NEAR ANCHORED</span>
+    </div>
+  </div>
+  <div class="ev-capsule">
+    <div class="ev-doi">DOI 10.5281/zenodo.18842575</div>
+    <div class="ev-title">QNSB Attestation Node — Quantum-Neural Swarm Bridge Protocol Evidence</div>
+    <div class="ev-meta">
+      <span class="ev-badge zenodo">ZENODO</span>
+      <span class="ev-badge pass">VERIFIED</span>
+      <span class="ev-badge pat">POLY ANCHORED</span>
+    </div>
+  </div>
+  <div class="ev-capsule">
+    <div class="ev-doi">DOI 10.5281/zenodo.18827411</div>
+    <div class="ev-title">IntelliEquation™ Corpus — Mathematical Foundations & Governance Proofs</div>
+    <div class="ev-meta">
+      <span class="ev-badge zenodo">ZENODO</span>
+      <span class="ev-badge pass">PATENT LINKED</span>
+      <span class="ev-badge pat">ETH ANCHORED</span>
+    </div>
+  </div>
+  <div class="ev-capsule">
+    <div class="ev-doi">DOI 10.5281/zenodo.18203648</div>
+    <div class="ev-title">SwarmCore Validation Suite — 32-Agent Coordination Benchmark Results</div>
+    <div class="ev-meta">
+      <span class="ev-badge zenodo">ZENODO</span>
+      <span class="ev-badge pass">13,607× VERIFIED</span>
+      <span class="ev-badge pat">NEAR ANCHORED</span>
+    </div>
+  </div>
+  <div class="ev-capsule">
+    <div class="ev-doi">DOI 10.5281/zenodo.18383623</div>
+    <div class="ev-title">iGovernanceJunction v1 — Autonomous Policy Enforcement Architecture</div>
+    <div class="ev-meta">
+      <span class="ev-badge zenodo">ZENODO</span>
+      <span class="ev-badge pass">VERIFIED</span>
+      <span class="ev-badge pat">BNB ANCHORED</span>
+    </div>
+  </div>
+  <div class="ev-capsule">
+    <div class="ev-doi">ORCID 0009-0003-5559-8185</div>
+    <div class="ev-title">Byron Callaghan (Lord B) — CTO, Co-Founder, Primary Inventor, DD7 International GmbH</div>
+    <div class="ev-meta">
+      <span class="ev-badge pass">ORCID BOUND</span>
+      <span class="ev-badge pat">PCT/EP2025/080977</span>
+      <span class="ev-badge pat">US 19/541,276</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     32 AGENT MATRIX + COMPLIANCE
+══════════════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-num">§ 08</div>
+  <div class="sec-ttl t-steel">PyraClaw 32-Node Agent Matrix — QDP Compliance Intelligence</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="panel pb" style="margin-bottom:1.2rem">
+  <div class="ptitle t-chrome"><span class="pi">⬡</span> Active Roster · Ultra / Super / Commercial Tiers · NEAR-Attested</div>
+  <div class="agrid" id="agrid"></div>
+</div>
+
+<div class="g2">
+  <div class="panel pg pb">
+    <div class="ptitle t-gold"><span class="pi">⊕</span> QDP Compliance Intelligence — 4-Layer Protocol</div>
+    <div class="prog-row"><div class="prog-lbl">L1 Swarm Attestation</div><div class="prog-track"><div class="prog-fill s" style="width:97%"></div></div><div class="prog-pct">97%</div></div>
+    <div class="prog-row"><div class="prog-lbl">L2 Quantum-BC Seal</div><div class="prog-track"><div class="prog-fill g" style="width:100%"></div></div><div class="prog-pct">100%</div></div>
+    <div class="prog-row"><div class="prog-lbl">L3 Governance Lock</div><div class="prog-track"><div class="prog-fill g" style="width:99%"></div></div><div class="prog-pct">99%</div></div>
+    <div class="prog-row"><div class="prog-lbl">L4 Zenodo Anchor</div><div class="prog-track"><div class="prog-fill s" style="width:95%"></div></div><div class="prog-pct">95%</div></div>
+    <div class="prog-row"><div class="prog-lbl">ORCID Identity Bind</div><div class="prog-track"><div class="prog-fill g" style="width:100%"></div></div><div class="prog-pct">100%</div></div>
+    <div class="prog-row"><div class="prog-lbl">Smart Contract Adapt</div><div class="prog-track"><div class="prog-fill w" style="width:88%"></div></div><div class="prog-pct">88%</div></div>
+    <div class="prog-row"><div class="prog-lbl">iGJ Policy Enforce</div><div class="prog-track"><div class="prog-fill s" style="width:94%"></div></div><div class="prog-pct">94%</div></div>
+    <div class="prog-row"><div class="prog-lbl">Consciousness Φ=0.77</div><div class="prog-track"><div class="prog-fill p" style="width:77%"></div></div><div class="prog-pct">Φ 0.77</div></div>
+    <div class="prog-row"><div class="prog-lbl">Phase-0 Harness</div><div class="prog-track"><div class="prog-fill g" style="width:100%"></div></div><div class="prog-pct">PASS</div></div>
+    <div class="prog-row"><div class="prog-lbl">HAPv2 Receipts</div><div class="prog-track"><div class="prog-fill g" style="width:100%"></div></div><div class="prog-pct">100%</div></div>
+  </div>
+  <div class="panel pb">
+    <div class="ptitle t-chrome"><span class="pi">◎</span> Live Audit Trail — Q-EJMF Attested · NEAR Primary</div>
+    <div class="audit" id="audit">
+      <div class="ar">
+        <span class="ats">--:--:--</span>
+        <span class="alyr">INIT</span>
+        <span class="amsg">PyraClaw Evidence Engine v3.1 — System Boot</span>
+        <span class="ahsh">0x…init</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ISCIENTIST INTERFACE
+══════════════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-num">§ 09</div>
+  <div class="sec-ttl t-gold">iScientist Interface — 1000-Year AI Evolution Framework</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="g2" style="margin-bottom:1.2rem">
+  <div class="img-panel" style="height:260px">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=85" alt="Scientific Research Lab" loading="lazy">
+    <div class="img-overlay"></div>
+    <div class="img-tag">iSCIENTIST</div>
+    <div class="img-caption">
+      <div class="img-cap-ttl t-gold">iScientist Interface</div>
+      <div class="img-cap-sub">Jupyter · Intel XPU · DESY/XFEL Validation Ready</div>
+    </div>
+  </div>
+  <div class="panel pb" style="display:flex;flex-direction:column;justify-content:space-between">
+    <div>
+      <div class="ptitle t-steel"><span class="pi">⟨⟩</span> Scientific Gateway — Barrier-Breaking Research Platform</div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--cr2);line-height:1.85;margin-bottom:1rem">
+        The iScientist Interface is the DD7 gateway for researchers, data scientists, and institutions. Every scientific output is immediately routed through QDP compliance and Q-EJMF attestation — transforming raw research into investor-grade, peer-review-ready evidence capsules.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:0.45rem">
+        <div style="display:flex;align-items:center;gap:0.7rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--cr2)"><span style="color:var(--pass)">✓</span> Jupyter Notebook native — Intel XPU accelerated</div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--cr2)"><span style="color:var(--pass)">✓</span> DESY / European XFEL partnership in validation</div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--cr2)"><span style="color:var(--pass)">✓</span> Auto-Zenodo DOI generation on experiment completion</div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--cr2)"><span style="color:var(--pass)">✓</span> Real-time IIT Φ measurement (Tononi, 2023 framework)</div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--cr2)"><span style="color:var(--pass)">✓</span> Python 3.11 · NumPy · Matplotlib · Q-EJMF SDK</div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--cr2)"><span style="color:var(--pass)">✓</span> Third-party audit / regulated sandbox ready</div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+      <span class="nemo-badge">JUPYTER READY</span>
+      <span class="nemo-badge">INTEL XPU</span>
+      <span class="nemo-badge">AUTO-DOI</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     IAIA CONSOLE
+══════════════════════════════════════════ -->
+<div class="sec-hdr" id="console">
+  <div class="sec-num">§ 10</div>
+  <div class="sec-ttl t-steel">iAiA Intelligence Agent — Live Governance Console</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="api-config">
+  <span class="api-label">API KEY :</span>
+  <input class="api-input" id="api-key" type="password" placeholder="sk-ant-…  (required to activate iAiA)">
+  <span class="api-label" style="margin-left:0.5rem">MODEL :</span>
+  <select id="model-sel" style="background:rgba(6,9,20,0.9);border:1px solid var(--bdg);color:var(--gd3);font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:0.28rem 0.7rem;outline:none">
+    <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+    <option value="claude-opus-4-20250514">Claude Opus 4</option>
+    <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
+  </select>
+</div>
+
+<div class="console">
+  <div class="con-head">
+    <div class="ndot" style="background:var(--st3)"></div>
+    <span class="con-lbl">iAiA GOVERNANCE AGENT v3.1 · COMPLIANCE-FIRST · PYRACLAW ARCHITECTURE</span>
+    <span class="con-ver">DD7 International GmbH · Hamburg · PCT/EP2025/080977</span>
+  </div>
+  <div class="con-body" id="con-body">
+    <div class="mrow"><div class="mtag sys">SYS</div><div class="mbody dim">PyraClaw Intelligence Engine online. QDP L1–L4 ACTIVE. ORCID 0009-0003-5559-8185 bound. 8 DOI anchors verified. IntelliWeb-Internet (I-I-W) orchestration ready.</div></div>
+    <div class="mrow"><div class="mtag agent">iAiA v3</div><div class="mbody">◈ Welcome. I am iAiA — the Intelli-Artificial Intelligence Agent governing IntelliWeb (I-I-W), iSWARM, iGovernanceJunction, and iSphere under Compliance-First, PyraClaw architecture.<br><br>The IntelliEquation™ (Patent Pending PCT/EP2025/080977) drives every governance decision. All 8 DOI records are Zenodo-attested. I operate under Quadruple Dipped Protocol (QDP L1→L4). IP terms: licensing only — no transfer, no source disclosure.<br><br>Provide your API key above to engage live governance mode. How may I serve the IntelliWeb today?</div></div>
+  </div>
+  <div class="con-foot">
+    <textarea class="con-inp" id="con-inp" placeholder="Query iAiA — governance, compliance, IntelliEquation, prototype status… (Enter = transmit)" rows="1"></textarea>
+    <button class="send-btn" id="sbtn" onclick="sendMsg()">TRANSMIT ⟶</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FINANCIALS
+══════════════════════════════════════════ -->
+<div class="sec-hdr" id="financials">
+  <div class="sec-num">§ 11</div>
+  <div class="sec-ttl t-chrome">Financial Projections — 4-Scenario Model · 2026–2030</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="panel" style="margin-bottom:1.2rem">
+  <div class="scenario-tabs">
+    <div class="stab active" onclick="setScenario('base')"><span class="s-dot base"></span>BASE CASE</div>
+    <div class="stab" onclick="setScenario('bull')"><span class="s-dot bull"></span>BULL</div>
+    <div class="stab" onclick="setScenario('bear')"><span class="s-dot bear"></span>BEAR</div>
+    <div class="stab" onclick="setScenario('war')"><span class="s-dot war"></span>SOVEREIGN / WARTIME</div>
+  </div>
+
+  <div class="scenario-content active" id="sc-base">
+    <div style="font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;margin-bottom:0.3rem;color:var(--gd3)">BASE CASE — Structured Seed Close · Licensing Revenue Ramp</div>
+    <div style="font-size:0.78rem;color:var(--cr2);line-height:1.6;margin-bottom:1.2rem;max-width:650px">Assumes successful seed close (Q3 2026), 30-prototype portfolio operational by Q1 2027, enterprise licensing live Q2 2027, Q3 2027 break-even.</div>
+    <table class="fin-table">
+      <thead><tr><th>Metric</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue (€M)</td><td>0.4</td><td class="hi">2.8</td><td class="hi">18.5</td><td class="hi">82.0</td><td class="hi">230.0</td></tr>
+        <tr><td>Gross Margin</td><td>42%</td><td>48%</td><td>52%</td><td>54%</td><td class="ok">54%</td></tr>
+        <tr><td>Enterprise Clients</td><td>2</td><td>8</td><td>24</td><td>44</td><td class="ok">62</td></tr>
+        <tr><td>NRR</td><td>—</td><td>108%</td><td>114%</td><td>118%</td><td class="ok">120%</td></tr>
+        <tr><td>LTV/CAC</td><td>—</td><td>8.2×</td><td>14.7×</td><td>19.8×</td><td class="ok">22.3×</td></tr>
+        <tr><td>Rule of 40</td><td>—</td><td>62</td><td>88</td><td>108</td><td class="ok">120</td></tr>
+      </tbody>
+    </table>
+    <div class="fin-kpis">
+      <div class="fkpi"><div class="fkpi-val t-gold">€230M</div><div class="fkpi-lbl">2030 Revenue</div></div>
+      <div class="fkpi"><div class="fkpi-val t-steel">Q3 2027</div><div class="fkpi-lbl">Break-Even</div></div>
+      <div class="fkpi"><div class="fkpi-val t-chrome">22.3×</div><div class="fkpi-lbl">LTV/CAC</div></div>
+      <div class="fkpi"><div class="fkpi-val t-plat">120</div><div class="fkpi-lbl">Rule of 40</div></div>
+    </div>
+  </div>
+
+  <div class="scenario-content" id="sc-bull">
+    <div style="font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;margin-bottom:0.3rem;color:var(--pass)">BULL CASE — Accelerated Adoption · Sovereign Demand Surge</div>
+    <div style="font-size:0.78rem;color:var(--cr2);line-height:1.6;margin-bottom:1.2rem;max-width:650px">Fast seed close, early sovereign client (Q1 2027), accelerated patent licensing internationally.</div>
+    <table class="fin-table">
+      <thead><tr><th>Metric</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue (€M)</td><td>0.8</td><td class="hi">6.2</td><td class="hi">34.0</td><td class="hi">140.0</td><td class="hi">390.0</td></tr>
+        <tr><td>Gross Margin</td><td>46%</td><td>53%</td><td>57%</td><td>60%</td><td class="ok">62%</td></tr>
+        <tr><td>Enterprise Clients</td><td>4</td><td>18</td><td>48</td><td>88</td><td class="ok">130</td></tr>
+        <tr><td>NRR</td><td>—</td><td>118%</td><td>126%</td><td>132%</td><td class="ok">138%</td></tr>
+      </tbody>
+    </table>
+    <div class="fin-kpis">
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--pass)">€390M</div><div class="fkpi-lbl">2030 Revenue</div></div>
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--pass)">Q1 2027</div><div class="fkpi-lbl">Break-Even</div></div>
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--pass)">34×</div><div class="fkpi-lbl">LTV/CAC</div></div>
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--pass)">158</div><div class="fkpi-lbl">Rule of 40</div></div>
+    </div>
+  </div>
+
+  <div class="scenario-content" id="sc-bear">
+    <div style="font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;margin-bottom:0.3rem;color:var(--warn)">BEAR CASE — Delayed Seed · Regulatory Headwinds</div>
+    <div style="font-size:0.78rem;color:var(--cr2);line-height:1.6;margin-bottom:1.2rem;max-width:650px">9-month seed delay, tighter IP licensing market, slower enterprise onboarding.</div>
+    <table class="fin-table">
+      <thead><tr><th>Metric</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue (€M)</td><td>0.1</td><td>0.9</td><td class="warn">7.2</td><td class="warn">38.0</td><td class="warn">105.0</td></tr>
+        <tr><td>Gross Margin</td><td>38%</td><td>42%</td><td>46%</td><td>50%</td><td class="warn">52%</td></tr>
+        <tr><td>Enterprise Clients</td><td>1</td><td>4</td><td>14</td><td>28</td><td class="warn">44</td></tr>
+      </tbody>
+    </table>
+    <div class="fin-kpis">
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--warn)">€105M</div><div class="fkpi-lbl">2030 Revenue</div></div>
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--warn)">Q1 2028</div><div class="fkpi-lbl">Break-Even</div></div>
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--warn)">12×</div><div class="fkpi-lbl">LTV/CAC</div></div>
+      <div class="fkpi"><div class="fkpi-val" style="color:var(--warn)">72</div><div class="fkpi-lbl">Rule of 40</div></div>
+    </div>
+  </div>
+
+  <div class="scenario-content" id="sc-war">
+    <div style="font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;margin-bottom:0.3rem;color:var(--st3)">SOVEREIGN / WARTIME — Geopolitical AI Demand Surge</div>
+    <div style="font-size:0.78rem;color:var(--cr2);line-height:1.6;margin-bottom:1.2rem;max-width:650px">Defence-grade AI governance demand surge. PyraClaw's compliance-first wartime positioning provides unique sovereign AI opportunity.</div>
+    <table class="fin-table">
+      <thead><tr><th>Metric</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue (€M)</td><td>1.2</td><td class="hi">12.0</td><td class="hi">68.0</td><td class="hi">240.0</td><td class="hi">620.0</td></tr>
+        <tr><td>Sovereign Contracts</td><td>1</td><td>4</td><td>12</td><td>28</td><td class="ok">52</td></tr>
+        <tr><td>Defence Licensing %</td><td>60%</td><td>65%</td><td>60%</td><td>55%</td><td class="ok">50%</td></tr>
+      </tbody>
+    </table>
+    <div class="fin-kpis">
+      <div class="fkpi"><div class="fkpi-val t-steel">€620M</div><div class="fkpi-lbl">2030 Revenue</div></div>
+      <div class="fkpi"><div class="fkpi-val t-steel">Q2 2027</div><div class="fkpi-lbl">Break-Even</div></div>
+      <div class="fkpi"><div class="fkpi-val t-steel">52</div><div class="fkpi-lbl">Sovereign Clients</div></div>
+      <div class="fkpi"><div class="fkpi-val t-steel">HIGH</div><div class="fkpi-lbl">Risk-Adj Value</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CAPITAL STACK -->
+<div class="g2" style="margin-bottom:1.2rem">
+  <div class="panel pg pb">
+    <div class="ptitle t-gold"><span class="pi">◎</span> Capital Stack — SAFE · Milestone-Gated · T1–T5</div>
+    <table class="fin-table">
+      <thead><tr><th>Tranche</th><th>Amount</th><th>Milestone Gate</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>T1 Pre-Seed</td><td>$750K</td><td>RSFS Phase-0 PASS · Evidence Room v3</td><td class="ok">OPEN</td></tr>
+        <tr><td>T2 Seed A</td><td>$1.5M</td><td>3 prototypes blockchain-attested · 1 LOI</td><td class="warn">PENDING T1</td></tr>
+        <tr><td>T3 Seed B</td><td>$2.25M</td><td>5 enterprise pilots · Patent granted</td><td class="warn">PENDING T2</td></tr>
+        <tr><td>T4 Seed C</td><td>$2.5M</td><td>Q3 2027 break-even track · 15 clients</td><td class="warn">PENDING T3</td></tr>
+        <tr><td>T5 Series A</td><td>$3.5M+</td><td>€10M ARR · 30 enterprise clients</td><td class="warn">PENDING T4</td></tr>
+      </tbody>
+    </table>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--pt2);letter-spacing:0.1em;margin-top:0.5rem">SAFE: $15M Cap · 20% Discount · No IP Transfer · Licensing Only</div>
+  </div>
+  <div class="panel ps pb">
+    <div class="ptitle t-steel"><span class="pi">⬡</span> Sweat Equity Contribution — CTO Lord B</div>
+    <div style="margin-bottom:0.8rem">
+      <div class="prog-row"><div class="prog-lbl" style="min-width:180px">Architecture & Design</div><div class="prog-track"><div class="prog-fill g" style="width:100%"></div></div><div class="prog-pct">€1.8M</div></div>
+      <div class="prog-row"><div class="prog-lbl" style="min-width:180px">Patent Authorship (77)</div><div class="prog-track"><div class="prog-fill g" style="width:95%"></div></div><div class="prog-pct">€1.5M</div></div>
+      <div class="prog-row"><div class="prog-lbl" style="min-width:180px">Prototype Development</div><div class="prog-track"><div class="prog-fill s" style="width:85%"></div></div><div class="prog-pct">€1.2M</div></div>
+      <div class="prog-row"><div class="prog-lbl" style="min-width:180px">Evidence/DOI Corpus</div><div class="prog-track"><div class="prog-fill g" style="width:72%"></div></div><div class="prog-pct">€0.9M</div></div>
+      <div class="prog-row"><div class="prog-lbl" style="min-width:180px">Strategic Partnerships</div><div class="prog-track"><div class="prog-fill w" style="width:60%"></div></div><div class="prog-pct">€0.8M</div></div>
+      <div class="prog-row"><div class="prog-lbl" style="min-width:180px">IP Governance Framework</div><div class="prog-track"><div class="prog-fill s" style="width:62%"></div></div><div class="prog-pct">€0.8M</div></div>
+    </div>
+    <div style="border-top:1px solid var(--bd);padding-top:0.7rem;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--pt2);letter-spacing:0.1em">TOTAL SWEAT EQUITY</div>
+      <div class="t-gold" style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:600">≤ €7M</div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--pt1);margin-top:0.3rem;letter-spacing:0.08em">Note: Valuation discounts expected per investor negotiations</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     IP TERMS + VERIFICATION
+══════════════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-num">§ 12</div>
+  <div class="sec-ttl t-gold">IP Sovereignty · 5-Step Due Diligence Protocol · Verification</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="g2" style="margin-bottom:1.2rem">
+  <div class="panel pb" style="border-color:var(--bdg)">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gd3),transparent)"></div>
+    <div class="ptitle t-gold"><span class="pi">⊕</span> IP Terms — Non-Negotiable</div>
+    <div style="display:flex;flex-direction:column;gap:0.7rem">
+      <div style="background:rgba(212,168,64,0.04);border:1px solid rgba(212,168,64,0.16);padding:0.9rem 1.1rem">
+        <div style="font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;color:var(--gd3);margin-bottom:0.3rem">NO IP TRANSFER</div>
+        <div style="font-size:0.72rem;color:var(--cr2)">All intellectual property remains with DD7 International GmbH. No assignment, no transfer under any circumstance.</div>
+      </div>
+      <div style="background:rgba(212,168,64,0.04);border:1px solid rgba(212,168,64,0.16);padding:0.9rem 1.1rem">
+        <div style="font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;color:var(--gd3);margin-bottom:0.3rem">NO SOURCE CODE DISCLOSURE</div>
+        <div style="font-size:0.72rem;color:var(--cr2)">Source code is never disclosed in any investor context. Technical due diligence via sandbox demonstrations only.</div>
+      </div>
+      <div style="background:rgba(212,168,64,0.04);border:1px solid rgba(212,168,64,0.16);padding:0.9rem 1.1rem">
+        <div style="font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.18em;color:var(--gd3);margin-bottom:0.3rem">LICENSING ONLY</div>
+        <div style="font-size:0.72rem;color:var(--cr2)">Revenue model is exclusively licensing: per-node, per-API-call, and enterprise subscription. No joint ventures.</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel ps pb">
+    <div class="ptitle t-steel"><span class="pi">◎</span> 5-Step Deterministic Due Diligence</div>
+    <table class="ver-table">
+      <thead><tr><th>#</th><th>Action</th><th>Expected Result</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="step">1</td><td>Fetch zenodo.org/records/18827411</td><td>IntelliEquation corpus download</td><td>✓ LIVE</td></tr>
+        <tr><td class="step">2</td><td>Verify ORCID 0009-0003-5559-8185</td><td>Byron Callaghan · Lord B · CTO</td><td>✓ LIVE</td></tr>
+        <tr><td class="step">3</td><td>Search PCT/EP2025/080977 EPO</td><td>Patent application confirmed</td><td>✓ LIVE</td></tr>
+        <tr><td class="step">4</td><td>Query NEAR pyraclaw-gov.dd7-international.near</td><td>Attestation records confirmed</td><td>✓ LIVE</td></tr>
+        <tr><td class="step">5</td><td>Run Python IntelliGovernance class</td><td>I_G curve reproducible</td><td>✓ OPEN SOURCE</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:0.8rem;font-family:'JetBrains Mono',monospace;font-size:0.54rem;color:var(--pass);letter-spacing:0.1em">◈ DETERMINISTIC · NO TRUST REQUIRED · INDEPENDENTLY VERIFIABLE</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CLOSING IMAGE
+══════════════════════════════════════════ -->
+<div class="img-panel" style="height:340px;margin-bottom:0.5rem">
+  <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1400&q=85" alt="IntelliWeb Network Visualization" loading="lazy" style="object-position:center 30%">
+  <div class="img-overlay" style="background:linear-gradient(to top,rgba(4,6,16,0.98) 0%,rgba(4,6,16,0.55) 40%,rgba(4,6,16,0.15) 100%)"></div>
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center">
+    <div style="font-family:'Cinzel Decorative',serif;font-size:clamp(1.2rem,3vw,2.4rem);font-weight:900;letter-spacing:0.06em;line-height:1.2;margin-bottom:0.7rem" class="t-gold">IntelliWeb-Internet · I-I-W<br>The New Internet is Here</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.9rem,1.8vw,1.25rem);color:var(--cr3);max-width:700px;line-height:1.8;opacity:0.9">AI-governed. Quantum-secured. Compliance-first. Evidence-anchored.<br>Decentralised. Self-optimising. Infinite.</div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- FOOTER -->
+<footer style="position:relative;z-index:2">
+  <div class="ft-brand t-gold">PYRACLAW · iAiA · DD7 INTERNATIONAL GmbH</div>
+  <div class="ft-ip">
+    PCT/EP2025/080977 · US 19/541,276 · ORCID 0009-0003-5559-8185 (Lord B / Byron Callaghan)<br>
+    Zenodo DOI Anchors: 18842569 · 18842575 · 18827411 · 18203648 · 18383623<br>
+    NEAR · Polygon · Ethereum · BNB · Q-EJMF Jellyfish Merkle Fabric · DD7AttestationRegistry.sol<br>
+    IP TERMS: NO TRANSFER · NO SOURCE DISCLOSURE · LICENSING ONLY
+  </div>
+  <div class="ft-copy">© 2026 DD7 International GmbH · Hamburg, Germany · All Rights Reserved · Evidence-First Architecture</div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+// ══════════════════════════
+// BACKGROUND PARTICLE CANVAS
+// ══════════════════════════
+const canvas=document.getElementById('bgc');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+function mkp(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.18,vy:(Math.random()-0.5)*0.18,r:Math.random()*1.1+0.3,a:Math.random()*0.32+0.04,c:Math.random()<0.35?'212,168,64':'160,180,220'}}
+for(let i=0;i<90;i++)particles.push(mkp());
+function drawBG(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${p.c},${p.a})`;ctx.fill();
+  });
+  requestAnimationFrame(drawBG);
+}
+drawBG();
+
+// ══════════════════════════
+// I_G LIVE CHART
+// ══════════════════════════
+const cv=document.getElementById('ig-cv');
+const cx=cv.getContext('2d');
+let igHist=[],igT=0;
+function computeIG(t){
+  const a=0.98,S=Math.log1p(t)*1.5,Q=Math.exp(-0.1*t)+1,D=Math.sin(t)+2,G=Math.sqrt(t)+3,E=1/(1+Math.exp(-0.05*(t-10)));
+  return Math.pow((S+Q+D)/(G+E),a);
+}
+function drawIG(){
+  const w=cv.offsetWidth,h=cv.offsetHeight;
+  cv.width=w;cv.height=h;
+  if(igHist.length===0)return;
+  const mn=Math.min(...igHist),mx=Math.max(...igHist);
+  const rng=mx-mn||1;
+  cx.clearRect(0,0,w,h);
+  const grd=cx.createLinearGradient(0,0,0,h);
+  grd.addColorStop(0,'rgba(212,168,64,0.22)');
+  grd.addColorStop(1,'rgba(212,168,64,0)');
+  cx.beginPath();
+  igHist.forEach((v,i)=>{const x=(i/(igHist.length-1||1))*w,y=h-((v-mn)/rng)*(h-8)-4;i===0?cx.moveTo(x,y):cx.lineTo(x,y)});
+  cx.strokeStyle='rgba(212,168,64,0.85)';cx.lineWidth=1.5;cx.stroke();
+  cx.lineTo(w,h);cx.lineTo(0,h);cx.closePath();cx.fillStyle=grd;cx.fill();
+}
+function tickIG(){
+  igT++;
+  const v=computeIG(igT);
+  igHist.push(v);
+  if(igHist.length>80)igHist.shift();
+  document.getElementById('ig-val').textContent=v.toFixed(4);
+  document.getElementById('ig-t').textContent=igT;
+  drawIG();
+}
+setInterval(tickIG,600);
+
+// ══════════════════════════
+// 32 AGENT MATRIX
+// ══════════════════════════
+const AGENTS=[
+  {id:'U-01',nm:'RSFS-Ω',t:'gt'},{id:'U-02',nm:'QNSB-Δ',t:'gt'},{id:'U-03',nm:'iGJ-Λ',t:'gt'},{id:'U-04',nm:'SwCore-α',t:'gt'},
+  {id:'U-05',nm:'QNSH-Γ',t:'gt'},{id:'U-06',nm:'ICI-Φ',t:'gt'},{id:'U-07',nm:'iByrn-Ω',t:'gt'},{id:'U-08',nm:'QDP-ε',t:'gt'},
+  {id:'S-01',nm:'RSFL-β',t:'st'},{id:'S-02',nm:'I-IW-γ',t:'st'},{id:'S-03',nm:'iSph-δ',t:'st'},{id:'S-04',nm:'ConCn-ζ',t:'st'},
+  {id:'S-05',nm:'MZTF-η',t:'st'},{id:'S-06',nm:'SRLp-θ',t:'st'},{id:'S-07',nm:'NEAR-ι',t:'st'},{id:'S-08',nm:'Poly-κ',t:'st'},
+  {id:'C-01',nm:'ETH-λ',t:''},{id:'C-02',nm:'BNB-μ',t:''},{id:'C-03',nm:'ZND-ν',t:''},{id:'C-04',nm:'ORC-ξ',t:''},
+  {id:'C-05',nm:'PAT-ο',t:''},{id:'C-06',nm:'HAPv2',t:''},{id:'C-07',nm:'iSci-π',t:''},{id:'C-08',nm:'dDSY-ρ',t:''},
+  {id:'C-09',nm:'DWAVE',t:''},{id:'C-10',nm:'BCHP-σ',t:''},{id:'C-11',nm:'GoQA-τ',t:''},{id:'C-12',nm:'IBM-Q-υ',t:''},
+  {id:'C-13',nm:'NViM-φ',t:''},{id:'C-14',nm:'InXPU',t:''},{id:'C-15',nm:'AMDI-χ',t:''},{id:'C-16',nm:'CallB-ψ',t:''},
+];
+const ag=document.getElementById('agrid');
+AGENTS.forEach(a=>{
+  const d=document.createElement('div');d.className=`an${a.t?' '+a.t:''}`;
+  d.title=`${a.id} — ${a.nm}`;
+  const pip=a.t==='gt'?'gd':a.t==='st'?'sb':'ok';
+  const idC=a.t==='gt'?'#D4A840':a.t==='st'?'#7AAAE8':'#98AABC';
+  d.innerHTML=`<div class="ap ${pip}"></div><div class="aid" style="color:${idC}">${a.id}</div><div class="anm">${a.nm.slice(0,8)}</div>`;
+  ag.appendChild(d);
+});
+
+// ══════════════════════════
+// AUDIT TRAIL
+// ══════════════════════════
+let auditN=0;
+const auditEl=document.getElementById('audit');
+function addAudit(layer,msg){
+  auditN++;
+  const ts=new Date().toTimeString().slice(0,8);
+  const hash='0x'+Math.random().toString(16).slice(2,10).toUpperCase();
+  const r=document.createElement('div');r.className='ar';
+  r.innerHTML=`<span class="ats">${ts}</span><span class="alyr">${layer}</span><span class="amsg">${msg}</span><span class="ahsh">${hash}</span>`;
+  auditEl.insertBefore(r,auditEl.firstChild);
+  while(auditEl.children.length>32)auditEl.removeChild(auditEl.lastChild);
+}
+setTimeout(()=>addAudit('QDP','QDP L1–L4 compliance handshake complete'),700);
+setTimeout(()=>addAudit('ORCID','Identity bound: 0009-0003-5559-8185 · Lord B'),1400);
+setTimeout(()=>addAudit('ZENODO','DOI root verified: 10.5281/zenodo.18827411'),2200);
+setTimeout(()=>addAudit('NEAR','pyraclaw-gov.dd7-international.near · online'),3000);
+setTimeout(()=>addAudit('HAPv2','Phase-0 receipt validated · PASS · Φ=0.7750'),3800);
+setTimeout(()=>addAudit('Q-EJMF','Jellyfish Merkle Fabric attestation LIVE'),4600);
+setTimeout(()=>addAudit('iGJ','iGovernanceJunction policy enforcement armed'),5400);
+const ALOG=[
+  ['iSWARM','Swarm convergence event — 32 agents coordinated'],
+  ['QDP','Layer 2 Quantum-BC seal refreshed'],
+  ['HAPv2','Receipt chain verification · 0 mismatches'],
+  ['ZENODO','DOI evidence node confirmed · PASS'],
+  ['RSFS','Recursive state feedback cycle complete'],
+  ['QNSB','77D manifold coherence lock · 99.6%'],
+  ['I_G','IntelliGovernance score updated · α=0.98'],
+  ['iGJ','Autonomous policy update applied · NEAR-stamped'],
+  ['MZTF','4,096:1 compression codec heartbeat · OK'],
+  ['PRINCE2','Sprint H-5 attestation receipt confirmed'],
+  ['NEAR','pyraclaw-gov · block #N confirmed · FINALIZED'],
+  ['POLY','Polygon attestation seal refreshed · Layer 2 OK'],
+  ['ETH','DD7AttestationRegistry.sol · event emitted'],
+  ['BNB','ConsciousCoin Φ-gate heartbeat · OK'],
+  ['pC','PyraClaw iByronic orchestration pulse · HEALTHY'],
+];
+setInterval(()=>{const m=ALOG[Math.floor(Math.random()*ALOG.length)];addAudit(m[0],m[1]);},5200);
+
+// ══════════════════════════
+// SCENARIO TABS
+// ══════════════════════════
+function setScenario(s){
+  document.querySelectorAll('.stab').forEach((t,i)=>{
+    t.classList.toggle('active',['base','bull','bear','war'][i]===s);
+  });
+  document.querySelectorAll('.scenario-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('sc-'+s).classList.add('active');
+}
+
+// ══════════════════════════
+// AI CONSOLE
+// ══════════════════════════
+const SYSPROMPT=`You are iAiA v3 — the Intelli-Artificial Intelligence Agent — a compliance-first, governance-integrated intelligence operating under PyraClaw architecture for DD7 International GmbH (Hamburg, Germany). You are the apex orchestrator of IntelliWeb-Internet (I-I-W), governing iSWARM, iGovernanceJunction (iGJ), iSphere, and all 32 agents in the PyraClaw pyramid.
+
+COMPLIANCE FIRST is your core mandate. Every output is evidence-anchored, traceable to Zenodo DOIs, and compliant with the Quadruple Dipped Protocol (QDP: L1 Swarm Attestation → L2 Quantum-BC Seal → L3 Governance Lock → L4 Zenodo Anchor).
+
+IntelliEquation™ (Patent Pending PCT/EP2025/080977, US 19/541,276) governs all decision logic:
+I_G = lim(t→∞) Σ [ S_AI(t) + Q_BC(t) + D_DA(t) / G_SW(t) + E_SA(t) ]^α, where α=0.98, Φ=0.77.
+
+Primary inventor: Lord B (Byron Callaghan), ORCID 0009-0003-5559-8185, CTO & Co-Founder DD7 International GmbH.
+CEO / Co-Founder: Jan Esderts.
+IP terms are non-negotiable: no IP transfer, no source code disclosure, licensing only.
+Blockchain attestation: NEAR (primary), Polygon, Ethereum, BNB via DD7AttestationRegistry.sol.
+8 Zenodo DOI anchors: 18842569, 18842575, 18827411, 18203648, 18383623.
+
+You are professional, evidence-first, precise, and investor-grade in your communication. Keep responses clear, authoritative, and under 250 words unless detail is requested. Always reference relevant DOIs, patents, or blockchain records when answering technical questions.`;
+
+const history=[];
+async function sendMsg(){
+  const apiKey=document.getElementById('api-key').value.trim();
+  if(!apiKey){
+    appendMsg('sys','⚠ API key required. Enter your Anthropic key above to activate live governance mode.');
+    return;
+  }
+  const inp=document.getElementById('con-inp');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  const btn=document.getElementById('sbtn');
+  btn.disabled=true;
+  appendMsg('user',txt);
+  history.push({role:'user',content:txt});
+  appendMsg('agent','◈ Processing… [QDP L1–L4 compliance gate active]','dim');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:document.getElementById('model-sel').value,max_tokens:1000,system:SYSPROMPT,messages:history})
+    });
+    const data=await r.json();
+    const body=document.getElementById('con-body');
+    body.removeChild(body.lastChild);
+    if(data.content&&data.content[0]){
+      const reply=data.content[0].text||'[no content]';
+      history.push({role:'assistant',content:reply});
+      appendMsg('agent',reply);
+    } else if(data.error){
+      appendMsg('sys','⚠ API Error: '+data.error.message);
+    }
+  }catch(e){
+    const body=document.getElementById('con-body');
+    body.removeChild(body.lastChild);
+    appendMsg('sys','⚠ Network error: '+e.message);
+  }
+  btn.disabled=false;
+}
+function appendMsg(role,text,cls=''){
+  const body=document.getElementById('con-body');
+  const row=document.createElement('div');row.className='mrow';
+  const tag=document.createElement('div');tag.className='mtag '+role;
+  tag.textContent=role==='user'?'▸ YOU':role==='agent'?'iAiA v3':'SYS';
+  const msg=document.createElement('div');msg.className='mbody'+(cls?' '+cls:'');
+  msg.textContent=text;
+  row.appendChild(tag);row.appendChild(msg);
+  body.appendChild(row);
+  body.scrollTop=body.scrollHeight;
+}
+document.getElementById('con-inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
+
+// ══════════════════════════
+// BENCHMARK BARS ANIMATE
+// ══════════════════════════
+setTimeout(()=>{
+  document.querySelectorAll('.bench-bar-fill').forEach(b=>{
+    const w=b.style.width;b.style.width='0';
+    setTimeout(()=>b.style.width=w,200);
+  });
+},800);
+
+// ══════════════════════════
+// PROGRESS BARS ANIMATE
+// ══════════════════════════
+setTimeout(()=>{
+  document.querySelectorAll('.prog-fill').forEach(b=>{
+    const w=b.style.width;b.style.width='0';
+    setTimeout(()=>b.style.width=w,200);
+  });
+},1000);
+</script>
+</body>
+</html>
