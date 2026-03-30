@@ -1,0 +1,561 @@
+# PyraClaw GPU Production Stack
+# Patent: PCT/EP2025/080977 | ORCID: 0009-0009-7256-9337
+# Network: pyraclaw-mesh 172.44.0.0/16
+# Usage: docker compose -f docker-compose.pyraclaw-gpu.yml up -d
+
+version: "3.9"
+
+x-common: &common
+  restart: unless-stopped
+  env_file: .env
+  logging:
+    driver: json-file
+    options:
+      max-size: "50m"
+      max-file: "5"
+
+x-service-build: &service-build
+  build:
+    context: .
+    dockerfile: Dockerfile
+
+x-healthcheck-http: &healthcheck-http
+  interval: 30s
+  timeout: 10s
+  retries: 5
+  start_period: 40s
+
+networks:
+  pyraclaw-mesh:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.44.0.0/16
+
+volumes:
+  postgres-data:
+  qdrant-data:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+  nemoclaw-cache:
+
+services:
+  # ============================================================
+  # NemoClaw GPU Inference Cluster
+  # ============================================================
+  nemoclaw-0:
+    <<: *common
+    image: nemoclaw:latest
+    container_name: nemoclaw-0
+    hostname: nemoclaw-0
+    ports:
+      - "19000:19000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: [gpu]
+        limits:
+          memory: 32G
+    runtime: nvidia
+    environment:
+      - NEMOCLAW_NODE_ID=0
+      - NEMOCLAW_PORT=19000
+      - NEMOCLAW_CLUSTER_PEERS=nemoclaw-1:19001,nemoclaw-2:19002
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - nemoclaw-cache:/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19000/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.1.1
+
+  nemoclaw-1:
+    <<: *common
+    image: nemoclaw:latest
+    container_name: nemoclaw-1
+    hostname: nemoclaw-1
+    ports:
+      - "19001:19001"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["1"]
+              capabilities: [gpu]
+        limits:
+          memory: 32G
+    runtime: nvidia
+    environment:
+      - NEMOCLAW_NODE_ID=1
+      - NEMOCLAW_PORT=19001
+      - NEMOCLAW_CLUSTER_PEERS=nemoclaw-0:19000,nemoclaw-2:19002
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - nemoclaw-cache:/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19001/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.1.2
+
+  nemoclaw-2:
+    <<: *common
+    image: nemoclaw:latest
+    container_name: nemoclaw-2
+    hostname: nemoclaw-2
+    ports:
+      - "19002:19002"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["2"]
+              capabilities: [gpu]
+        limits:
+          memory: 32G
+    runtime: nvidia
+    environment:
+      - NEMOCLAW_NODE_ID=2
+      - NEMOCLAW_PORT=19002
+      - NEMOCLAW_CLUSTER_PEERS=nemoclaw-0:19000,nemoclaw-1:19001
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - nemoclaw-cache:/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19002/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.1.3
+
+  nemoclaw-router:
+    <<: *common
+    image: nginx:1.25-alpine
+    container_name: nemoclaw-router
+    hostname: nemoclaw-router
+    ports:
+      - "19080:19080"
+    volumes:
+      - ./infra/nginx/nemoclaw-router.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      nemoclaw-0:
+        condition: service_healthy
+      nemoclaw-1:
+        condition: service_healthy
+      nemoclaw-2:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19080/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.1.10
+
+  # ============================================================
+  # Core Services
+  # ============================================================
+  freedom-engine:
+    <<: *common
+    <<: *service-build
+    container_name: freedom-engine
+    hostname: freedom-engine
+    build:
+      context: ./services/freedom-engine
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - SERVICE_NAME=freedom-engine
+      - PORT=8001
+    depends_on:
+      - redis
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.1
+
+  orchestrator:
+    <<: *common
+    <<: *service-build
+    container_name: orchestrator
+    hostname: orchestrator
+    ports:
+      - "8002:8002"
+    environment:
+      - SERVICE_NAME=orchestrator
+      - PORT=8002
+    depends_on:
+      - redis
+      - postgres
+      - nemoclaw-router
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.2
+
+  engine-adapter:
+    <<: *common
+    <<: *service-build
+    container_name: engine-adapter
+    hostname: engine-adapter
+    ports:
+      - "8003:8003"
+    environment:
+      - SERVICE_NAME=engine-adapter
+      - PORT=8003
+    depends_on:
+      - redis
+      - orchestrator
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.3
+
+  rag-gateway:
+    <<: *common
+    <<: *service-build
+    container_name: rag-gateway
+    hostname: rag-gateway
+    ports:
+      - "8004:8004"
+    environment:
+      - SERVICE_NAME=rag-gateway
+      - PORT=8004
+    depends_on:
+      - qdrant
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.4
+
+  swarm-manager:
+    <<: *common
+    <<: *service-build
+    container_name: swarm-manager
+    hostname: swarm-manager
+    ports:
+      - "8005:8005"
+    environment:
+      - SERVICE_NAME=swarm-manager
+      - PORT=8005
+    depends_on:
+      - redis
+      - orchestrator
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.5
+
+  rsfs-core:
+    <<: *common
+    <<: *service-build
+    container_name: rsfs-core
+    hostname: rsfs-core
+    ports:
+      - "8006:8006"
+    environment:
+      - SERVICE_NAME=rsfs-core
+      - PORT=8006
+    depends_on:
+      - redis
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.6
+
+  deploy-gate:
+    <<: *common
+    <<: *service-build
+    container_name: deploy-gate
+    hostname: deploy-gate
+    ports:
+      - "8007:8007"
+    environment:
+      - SERVICE_NAME=deploy-gate
+      - PORT=8007
+    depends_on:
+      - redis
+      - evidence-ledger
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.7
+
+  evidence-ledger:
+    <<: *common
+    <<: *service-build
+    container_name: evidence-ledger
+    hostname: evidence-ledger
+    ports:
+      - "8009:8009"
+    environment:
+      - SERVICE_NAME=evidence-ledger
+      - PORT=8009
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8009/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.9
+
+  # ============================================================
+  # Neural / Research Services
+  # ============================================================
+  neural-mesh:
+    <<: *common
+    <<: *service-build
+    container_name: neural-mesh
+    hostname: neural-mesh
+    ports:
+      - "9044:9044"
+    environment:
+      - SERVICE_NAME=neural-mesh
+      - PORT=9044
+    depends_on:
+      - redis
+      - qdrant
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9044/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.3.1
+
+  frequency-engine:
+    <<: *common
+    <<: *service-build
+    container_name: frequency-engine
+    hostname: frequency-engine
+    ports:
+      - "9045:9045"
+    environment:
+      - SERVICE_NAME=frequency-engine
+      - PORT=9045
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9045/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.3.2
+
+  cortex-mapper:
+    <<: *common
+    <<: *service-build
+    container_name: cortex-mapper
+    hostname: cortex-mapper
+    ports:
+      - "9046:9046"
+    environment:
+      - SERVICE_NAME=cortex-mapper
+      - PORT=9046
+    depends_on:
+      - redis
+      - neural-mesh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9046/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.3.3
+
+  lorawan-bridge:
+    <<: *common
+    <<: *service-build
+    container_name: lorawan-bridge
+    hostname: lorawan-bridge
+    ports:
+      - "9047:9047"
+    environment:
+      - SERVICE_NAME=lorawan-bridge
+      - PORT=9047
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9047/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.3.4
+
+  fractal-forge:
+    <<: *common
+    <<: *service-build
+    container_name: fractal-forge
+    hostname: fractal-forge
+    ports:
+      - "9048:9048"
+    environment:
+      - SERVICE_NAME=fractal-forge
+      - PORT=9048
+    depends_on:
+      - redis
+      - neural-mesh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9048/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.3.5
+
+  # ============================================================
+  # Frontend
+  # ============================================================
+  prototype-casa:
+    <<: *common
+    build:
+      context: ./services/prototype-casa
+      dockerfile: Dockerfile
+    container_name: prototype-casa
+    hostname: prototype-casa
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    depends_on:
+      - orchestrator
+      - rag-gateway
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.4.1
+
+  # ============================================================
+  # Data Stores
+  # ============================================================
+  postgres:
+    <<: *common
+    image: pgvector/pgvector:pg16
+    container_name: pyraclaw-postgres
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-pyraclaw}
+      - POSTGRES_USER=${POSTGRES_USER:-pyraclaw}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pyraclaw}"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.5.1
+
+  qdrant:
+    <<: *common
+    image: qdrant/qdrant:v1.9.0
+    container_name: pyraclaw-qdrant
+    hostname: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.5.2
+
+  redis:
+    <<: *common
+    image: redis:7.2-alpine
+    container_name: pyraclaw-redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 2gb --maxmemory-policy allkeys-lru --appendonly yes
+    volumes:
+      - redis-data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.5.3
+
+  # ============================================================
+  # Monitoring
+  # ============================================================
+  prometheus:
+    <<: *common
+    image: prom/prometheus:v2.50.0
+    container_name: pyraclaw-prometheus
+    hostname: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=30d"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.6.1
+
+  grafana:
+    <<: *common
+    image: grafana/grafana:10.3.1
+    container_name: pyraclaw-grafana
+    hostname: grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.6.2
