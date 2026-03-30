@@ -1,7 +1,7 @@
 """
 PyraClaw Fractal Synthesis Engine (PFSE) — Ultra-Intelligence Fractal Codec
 DD7 International GmbH | Patent: PCT/EP2025/080977 | US 19/541,276
-ORCID: 0009-0009-7256-9337 | Byron Callaghan
+ORCID: 0009-0001-9561-5483 | Byron Callaghan
 
 UIFC v2026.4 — High-End Enterprise Edition
 Focus: Ultra-Photo-Realism, Precision Scaffolding, Sovereign Evidence Minting
@@ -72,7 +72,7 @@ def _seal_capsule(payload: Dict[str, Any], source: str) -> Dict[str, Any]:
         "colour_space": OUTPUT_CONFIG["colour_space"],
         "anchoring": OUTPUT_CONFIG["anchoring"],
         "attestation": {
-            "orcid": "0009-0009-7256-9337",
+            "orcid": "0009-0001-9561-5483",
             "patent": "PCT/EP2025/080977",
         },
     }

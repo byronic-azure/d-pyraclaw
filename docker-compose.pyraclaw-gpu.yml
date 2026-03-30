@@ -1,5 +1,5 @@
 # PyraClaw GPU Production Stack
-# Patent: PCT/EP2025/080977 | ORCID: 0009-0009-7256-9337
+# Patent: PCT/EP2025/080977 | ORCID: 0009-0001-9561-5483
 # Network: pyraclaw-mesh 172.44.0.0/16
 # Usage: docker compose -f docker-compose.pyraclaw-gpu.yml up -d
 

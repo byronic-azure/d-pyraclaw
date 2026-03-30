@@ -1,6 +1,6 @@
 """
 QDP (Quad-Dimensional Proof) Hasher — PyRaClaw Security Layer
-Patent: PCT/EP2025/080977 | ORCID: 0009-0009-7256-9337
+Patent: PCT/EP2025/080977 | ORCID: 0009-0001-9561-5483
 """
 
 import hashlib
@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional
 QDP_VERSION = "1.0.0"
 SUPER_HASH = "9146ce69652472be6ab914e84d2ff76fa64b6ae71c19a0365858c73ee68cda88"
 PATENT = "PCT/EP2025/080977"
-ORCID = "0009-0009-7256-9337"
+ORCID = "0009-0001-9561-5483"
 PHI_TARGET = 0.77
 KAPPA = 0.618
 C_CRIT = 52.79

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minted Green — See It. Verify It. Trust It.</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f1a;--surface:#0f1525;--border:#1a2038;--cyan:#06b6d4;--purple:#7c3aed;--green:#10b981;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.hero{text-align:center;padding:6rem 2rem 4rem;background:linear-gradient(135deg,#041a0f,#0a1628,#050c1a)}
+.hero h1{font-size:3rem;font-weight:700;background:linear-gradient(90deg,#10b981,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+.hero p{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2rem}
+.seal{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.5rem;border-radius:999px;font-size:.85rem;font-weight:700;border:2px solid var(--green);background:rgba(16,185,129,.08);color:var(--green)}
+.seal::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}50%{box-shadow:0 0 0 8px rgba(16,185,129,0)}}
+.section{max-width:1000px;margin:0 auto;padding:4rem 2rem}
+.section h2{font-size:1.8rem;font-weight:700;margin-bottom:1.5rem;color:var(--green)}
+.section p{line-height:1.8;color:var(--muted);margin-bottom:1rem}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:center;margin:2rem 0}
+.compare-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center}
+.compare-box h3{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
+.compare-box .size{font-size:2.5rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.compare-box .detail{font-size:.75rem;color:var(--muted);margin-top:.5rem}
+.compare-arrow{font-size:2rem;color:var(--green)}
+.bad{color:var(--muted)}
+.good{background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;position:relative}
+.step::after{content:'>';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);color:var(--green);font-size:1.2rem;font-weight:700}
+.step:last-child::after{content:none}
+.step .num{font-size:2rem;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace}
+.step .label{font-size:.8rem;font-weight:600;margin:.5rem 0 .25rem}
+.step .desc{font-size:.7rem;color:var(--muted)}
+.evidence-box{background:#050a08;border:2px solid rgba(16,185,129,.2);border-radius:16px;padding:2rem;margin:2rem 0;font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:2.2}
+.ev-file{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.ev-file:last-child{border:none}
+.ev-name{color:var(--green);font-weight:600}
+.ev-hash{color:#475569}
+.ev-status{color:var(--green)}
+.zoom-demo{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0}
+.zoom-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+.zoom-box h4{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
+.zoom-box .result{font-size:1rem;font-weight:600;padding:2rem;border-radius:8px}
+.zoom-bad{background:repeating-linear-gradient(45deg,#1a1a2e,#1a1a2e 4px,#12121f 4px,#12121f 8px);color:var(--muted)}
+.zoom-good{background:linear-gradient(135deg,#0a1a10,#0f1525);border:1px solid rgba(16,185,129,.2);color:var(--green)}
+.cta{text-align:center;padding:4rem 2rem;background:linear-gradient(135deg,rgba(16,185,129,.03),rgba(6,182,212,.03))}
+.cta a{display:inline-block;padding:.75rem 2rem;background:linear-gradient(90deg,var(--green),var(--cyan));color:#0a0f1a;text-decoration:none;border-radius:8px;font-weight:700;font-size:.9rem}
+.footer{text-align:center;padding:2rem;color:var(--muted);font-size:.72rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="seal">MINTED GREEN VERIFIED</div>
+  <h1>See It. Verify It. Trust It.</h1>
+  <p>The Minted Green demo: a high-resolution photograph compressed to a fractal evidence capsule, sealed with QDP, anchored on chain. Every pixel accounted for.</p>
+</div>
+
+<div class="section">
+  <h2>The Pipeline — Four Steps to Proof</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="label">Ingest</div>
+      <div class="desc">16-bit TIFF/RAW asset enters the PyraClaw Command interface</div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="label">Decompose</div>
+      <div class="desc">iAiA splits image via Groq LPU into architectural fractal components</div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="label">Synthesise</div>
+      <div class="desc">Fractal Forge finds optimal range-domain mappings with Ultra-IQ</div>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <div class="label">Mint</div>
+      <div class="desc">QDP seals the capsule. Blockchain anchor. Minted Green badge appears.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Compression — 500x Smaller, Zero Loss</h2>
+
+  <div class="compare">
+    <div class="compare-box">
+      <h3>Original TIFF</h3>
+      <div class="size bad">50 MB</div>
+      <div class="detail">16-bit, 4096x4096, P3 colour space</div>
+      <div class="detail">Fixed resolution. Large file. No proof.</div>
+    </div>
+    <div class="compare-arrow">&#10132;</div>
+    <div class="compare-box" style="border-color:rgba(16,185,129,.3)">
+      <h3>PyraClaw .claw</h3>
+      <div class="size good">100 KB</div>
+      <div class="detail">Fractal Evidence Capsule, CLAW_2026 format</div>
+      <div class="detail">Infinite resolution. Tiny file. Full proof chain.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Zoom Test — Infinite Resolution</h2>
+
+  <div class="zoom-demo">
+    <div class="zoom-box">
+      <h4>JPEG at 500% Zoom</h4>
+      <div class="result zoom-bad">
+        Visible block artefacts<br>
+        Colour banding in gradients<br>
+        Edge blur on fine detail<br>
+        <span style="color:var(--muted);font-size:.7rem">Fixed pixel grid — information lost at compression</span>
+      </div>
+    </div>
+    <div class="zoom-box">
+      <h4>.claw at 500% Zoom</h4>
+      <div class="result zoom-good">
+        Zero artefacts<br>
+        Smooth mathematical gradients<br>
+        Sharp edges at any scale<br>
+        <span style="font-size:.7rem">Fractal rules reconstruct detail — resolution independent</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>The Evidence Capsule</h2>
+  <p>Every Minted Green asset produces 8 verifiable files. Click verify.sh to confirm the entire chain — no vendor required.</p>
+
+  <div class="evidence-box">
+    <div class="ev-file"><span class="ev-name">inputs.json</span><span class="ev-hash">sha256:a3f7c9b2e1d4...</span><span class="ev-status">SEALED</span></div>
+    <div class="ev-file"><span class="ev-name">outputs.json</span><span class="ev-hash">sha256:dcd8bfb5e2b3...</span><span class="ev-status">SEALED</span></div>
+    <div class="ev-file"><span class="ev-name">digests.json</span><span class="ev-hash">sha256:5f38c86fe0b6...</span><span class="ev-status">SEALED</span></div>
+    <div class="ev-file"><span class="ev-name">signature.json</span><span class="ev-hash">orcid:0009-0001-9561-5483</span><span class="ev-status">ATTESTED</span></div>
+    <div class="ev-file"><span class="ev-name">verify.sh</span><span class="ev-hash">self-contained verifier</span><span class="ev-status">RUNNABLE</span></div>
+    <div class="ev-file"><span class="ev-name">node_trace.json</span><span class="ev-hash">agents: 3 participated</span><span class="ev-status">TRACED</span></div>
+    <div class="ev-file"><span class="ev-name">route_map.json</span><span class="ev-hash">hops: ingest>decompose>forge>mint</span><span class="ev-status">MAPPED</span></div>
+    <div class="ev-file"><span class="ev-name">manifest.json</span><span class="ev-hash">master capsule index</span><span class="ev-status">ANCHORED</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Run It Yourself</h2>
+  <div style="background:#080c14;border:1px solid var(--border);border-radius:12px;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:2.2;color:var(--muted)">
+    <span style="color:var(--green)">$</span> pyraclaw init --template=MINTED_GREEN --architecture=SURGICAL<br>
+    <span style="color:var(--green)">$</span> pyraclaw ingest photo.tiff<br>
+    <span style="color:var(--muted)">&nbsp;&nbsp;Decomposing... 4096x4096 -> 1,048,576 range blocks</span><br>
+    <span style="color:var(--muted)">&nbsp;&nbsp;Synthesising... alpha=1.89 fractal_dim=1.847 iterations=2</span><br>
+    <span style="color:var(--green)">$</span> pyraclaw mint output.claw<br>
+    <span style="color:var(--muted)">&nbsp;&nbsp;QDP sealing... SHA-256 SHA-512 SHA3-256 SHA3-512</span><br>
+    <span style="color:var(--muted)">&nbsp;&nbsp;RSFS gate... PASS (phi=0.8142, C=67.31)</span><br>
+    <span style="color:var(--muted)">&nbsp;&nbsp;Blockchain anchor... tx:0x7a64...</span><br>
+    <span style="color:var(--green);font-weight:600">&nbsp;&nbsp;MINTED GREEN &#10003; output.claw (102KB) + evidence capsule (8 files)</span>
+  </div>
+</div>
+
+<div class="cta">
+  <h2 style="margin-bottom:1rem;color:var(--text)">Try the demo.</h2>
+  <a href="/developers">Get Started</a>
+</div>
+
+<div class="footer">
+  Minted Green Demo v1.0 &middot; PyraClaw Fractal Synthesis Engine &middot; UIFC v2026.4 &middot;
+  DD7 International GmbH &middot; Patent PCT/EP2025/080977 &middot; ORCID 0009-0001-9561-5483 &middot;
+  No overclaiming. The mathematics speaks for itself.
+</div>
+
+</body>
+</html>

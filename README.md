@@ -2,7 +2,7 @@
 
 **MINTED_GREEN | SURGICAL | GPU x4 | 44-Channel Neural Mesh**
 
-DD7 International GmbH | Patent: PCT/EP2025/080977 | US 19/541,276 | ORCID: 0009-0009-7256-9337
+DD7 International GmbH | Patent: PCT/EP2025/080977 | US 19/541,276 | ORCID: 0009-0001-9561-5483
 
 ---
 

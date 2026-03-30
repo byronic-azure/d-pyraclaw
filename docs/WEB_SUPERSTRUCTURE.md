@@ -6,7 +6,7 @@
 |  PYRACLAW WEB SUPERSTRUCTURE — MISSION CONTROL                               |
 |  DD7 International GmbH | MINTED_GREEN | SURGICAL                            |
 |  Patent: PCT/EP2025/080977 | US 19/541,276                                  |
-|  ORCID: 0009-0009-7256-9337 | Byron Callaghan (Lord B)                       |
+|  ORCID: 0009-0001-9561-5483 | Byron Callaghan (Lord B)                       |
 +==============================================================================+
 ```
 
@@ -209,4 +209,4 @@ The Mission Control is swarm-enhanced — it doesn't just monitor, it actively m
 
 *DD7 International GmbH | PyraClaw Web Superstructure v1.0.0 | March 2026*
 *MINTED_GREEN | SURGICAL | No overclaiming. Results-driven.*
-*Patent: PCT/EP2025/080977 | US 19/541,276 | ORCID: 0009-0009-7256-9337*
+*Patent: PCT/EP2025/080977 | US 19/541,276 | ORCID: 0009-0001-9561-5483*

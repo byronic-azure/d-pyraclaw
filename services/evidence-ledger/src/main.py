@@ -1,6 +1,6 @@
 """
 Evidence Ledger Service — PyRaClaw QDP-Sealed Record Store
-Patent: PCT/EP2025/080977 | ORCID: 0009-0009-7256-9337
+Patent: PCT/EP2025/080977 | ORCID: 0009-0001-9561-5483
 """
 
 import hashlib
@@ -21,7 +21,7 @@ START_TIME = time.time()
 
 SUPER_HASH = "9146ce69652472be6ab914e84d2ff76fa64b6ae71c19a0365858c73ee68cda88"
 PATENT = "PCT/EP2025/080977"
-ORCID = "0009-0009-7256-9337"
+ORCID = "0009-0001-9561-5483"
 HMAC_KEY = SUPER_HASH.encode("utf-8")
 
 ZENODO_STAGING_URL = "https://sandbox.zenodo.org/api/deposit/depositions"

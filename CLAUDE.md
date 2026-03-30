@@ -16,4 +16,4 @@
 - No overclaiming. No grand claims. Results-driven only.
 - Every evidence record gets QDP sealed (SHA-256 + SHA-512 + SHA3-256 + SHA3-512)
 - Patent: PCT/EP2025/080977 | US 19/541,276
-- ORCID: 0009-0009-7256-9337
+- ORCID: 0009-0001-9561-5483

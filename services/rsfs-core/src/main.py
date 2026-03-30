@@ -1,6 +1,6 @@
 """
 RSFS Core Service — Recursive Self-Fixing Scorecard
-Patent: PCT/EP2025/080977 | ORCID: 0009-0009-7256-9337
+Patent: PCT/EP2025/080977 | ORCID: 0009-0001-9561-5483
 """
 
 import time
