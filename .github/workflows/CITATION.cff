@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+title: "NEUSARS v3.3.2 Consolidated Sovereign Bundle — Deterministic, Signed, Replayable, Fail-Closed Computational Nodal System"
+message: "If you use this software artifact, please cite it as below."
+type: software
+authors:
+  - family-names: "Al Thani"
+    given-names: "Jamil"
+    orcid: "https://orcid.org/0009-0000-8858-4992"
+  - family-names: "Cisneros"
+    given-names: "Grace Maria"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.18910732"
+repository-code: "https://doi.org/10.5281/zenodo.18910732"
+abstract: >
+  NEUSARS v3.3.2 is a consolidated sovereign software bundle implementing a
+  deterministic computational nodal system within the D10Z framework. The
+  release provides a technical execution artifact with frozen inputs,
+  canonical outputs, digest sealing, Ed25519 signing, fail-closed validation,
+  independent replay, and pack-level sealing. The bundle is designed as a
+  reproducible and auditable software system for sovereign-grade technical
+  review, rather than as an abstract mathematical disclosure.
+keywords:
+  - NEUSARS
+  - D10Z
+  - deterministic computation
+  - sovereign software
+  - replay verification
+  - fail-closed validation
+  - Ed25519
+  - cryptographic sealing
+  - nodal computation
+  - auditability
+license: "CC-BY-NC-4.0"
+version: "v3.3.2"
+date-released: "2026-03-08"
+references:
+  - type: software
+    title: "FINAL_MISSION_PACK v1.0 — Phase-0 Evidence Harness"
+    identifiers:
+      - type: doi
+        value: "10.5281/zenodo.18827411"

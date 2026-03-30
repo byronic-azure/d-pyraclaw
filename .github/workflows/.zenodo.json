@@ -1,0 +1,48 @@
+{
+    "title": "NEUSARS v3.3.2 Consolidated Sovereign Bundle — Deterministic, Signed, Replayable, Fail-Closed Computational Nodal System",
+    "upload_type": "software",
+    "publication_date": "2026-03-08",
+    "description": "NEUSARS v3.3.2 is a consolidated sovereign software bundle implementing a deterministic computational nodal system within the D10Z framework. Created by Jamil Al Thani & Grace Maria Cisneros as joint creators and executors. This release is structured as a technical execution artifact with frozen inputs, canonical outputs, digest sealing, Ed25519 signing, fail-closed verification, independent replay, and pack-level sealing. The coherence measure v(Zn) is the Kuramoto order parameter R = |mean(exp(i*phi))| in [0,1] with no forced floor. The emergent regime is verified in three stages: zero initialization (K-11), OPN graph diffusion producing R = 0.8655326305184504 before any actor runs (K-9), and 68 operators improving R to 0.9994473038955238 (+15.47%, K-10). All 10 kill-criteria pass. Ed25519 sovereign signature over Merkle seal. Independent replay confirmed. Jamil Al Thani and Grace Maria Cisneros jointly executed, verified, and sealed this entire system.",
+    "creators": [
+        {
+            "name": "Al Thani, Jamil",
+            "orcid": "0009-0000-8858-4992",
+            "affiliation": "MIZAN Corporation"
+        },
+        {
+            "name": "Cisneros, Grace Maria",
+            "affiliation": "MIZAN Corporation"
+        }
+    ],
+    "keywords": [
+        "NEUSARS",
+        "D10Z",
+        "deterministic computation",
+        "sovereign software",
+        "replay verification",
+        "fail-closed validation",
+        "Ed25519",
+        "cryptographic sealing",
+        "nodal computation",
+        "Kuramoto order parameter",
+        "emergent coherence",
+        "auditability",
+        "NQAE"
+    ],
+    "related_identifiers": [
+        {
+            "identifier": "10.5281/zenodo.18827411",
+            "relation": "isSupplementTo",
+            "resource_type": "software",
+            "scheme": "doi"
+        },
+        {
+            "identifier": "10.5281/zenodo.18896298",
+            "relation": "isNewVersionOf",
+            "resource_type": "software",
+            "scheme": "doi"
+        }
+    ],
+    "license": "cc-by-nc-4.0",
+    "version": "3.3.2"
+}
