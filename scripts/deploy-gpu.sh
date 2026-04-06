@@ -36,7 +36,7 @@ log "Waiting 20s for startup..."
 sleep 20
 
 HEALTHY=0; UNHEALTHY=0
-for port in 8001 8002 8005 8006 8009 9044 9045 9046 9047 9048 3000; do
+for port in 8001 8002 8005 8006 8009 8010 8011 9044 9045 9046 9047 9048 3000; do
   if curl -sf "http://localhost:$port/health" --max-time 4 | grep -q "healthy"; then
     log "  :$port HEALTHY"
     HEALTHY=$((HEALTHY + 1))
