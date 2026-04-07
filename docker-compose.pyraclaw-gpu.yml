@@ -430,6 +430,84 @@ services:
         ipv4_address: 172.44.3.5
 
   # ============================================================
+  # NVIDIA API Gateway
+  # ============================================================
+  nvidia-api:
+    <<: *common
+    build:
+      context: ./services/nvidia-api
+      dockerfile: Dockerfile
+    container_name: nvidia-api
+    hostname: nvidia-api
+    ports:
+      - "8010:8010"
+    environment:
+      - SERVICE_NAME=nvidia-api
+      - PORT=8010
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - NVIDIA_BASE_URL=${NVIDIA_BASE_URL:-https://integrate.api.nvidia.com/v1}
+      - NVIDIA_NEMOTRON_DEFAULT_MODEL=${NVIDIA_NEMOTRON_DEFAULT_MODEL:-nvidia/llama-3.3-nemotron-super-49b-v1}
+      - NVIDIA_NEMOTRON_VISION_MODEL=${NVIDIA_NEMOTRON_VISION_MODEL:-nvidia/llama-3.2-nv-vision-90b}
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.10
+
+  customer-assistant:
+    <<: *common
+    build:
+      context: ./services/customer-assistant
+      dockerfile: Dockerfile
+    container_name: customer-assistant
+    hostname: customer-assistant
+    ports:
+      - "8011:8011"
+    environment:
+      - SERVICE_NAME=customer-assistant
+      - PORT=8011
+      - NIM_URL=http://nvidia-api:8010
+    depends_on:
+      - nvidia-api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8011/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.11
+
+  # ============================================================
+  # iAiA 2 Cyber Specialist (Claude API)
+  # ============================================================
+  iaia-cyber:
+    <<: *common
+    build:
+      context: ./services/iaia-cyber
+      dockerfile: Dockerfile
+    container_name: iaia-cyber
+    hostname: iaia-cyber
+    ports:
+      - "8012:8012"
+    environment:
+      - SERVICE_NAME=iaia-cyber
+      - PORT=8012
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - IAIA_HAT_MODE=${IAIA_HAT_MODE:-white}
+      - IAIA_AUTH_TOKEN=${IAIA_AUTH_TOKEN:-}
+      - IAIA_PHASE=${IAIA_PHASE:-1}
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.12
+
+  # ============================================================
   # Frontend
   # ============================================================
   prototype-casa:
