@@ -480,6 +480,34 @@ services:
         ipv4_address: 172.44.2.11
 
   # ============================================================
+  # iAiA 2 Cyber Specialist (Claude API)
+  # ============================================================
+  iaia-cyber:
+    <<: *common
+    build:
+      context: ./services/iaia-cyber
+      dockerfile: Dockerfile
+    container_name: iaia-cyber
+    hostname: iaia-cyber
+    ports:
+      - "8012:8012"
+    environment:
+      - SERVICE_NAME=iaia-cyber
+      - PORT=8012
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - IAIA_HAT_MODE=${IAIA_HAT_MODE:-white}
+      - IAIA_AUTH_TOKEN=${IAIA_AUTH_TOKEN:-}
+      - IAIA_PHASE=${IAIA_PHASE:-1}
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      <<: *healthcheck-http
+    networks:
+      pyraclaw-mesh:
+        ipv4_address: 172.44.2.12
+
+  # ============================================================
   # Frontend
   # ============================================================
   prototype-casa:
