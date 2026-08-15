@@ -65,8 +65,8 @@ All four must match. One failure = full rejection.
 
 ## No Overclaiming
 
-This system provides computational services. It does not claim consciousness, quantum supremacy, or capabilities beyond what the code implements. Every claim is backed by running code and verifiable evidence.
+This system provides computational services. It does not claim consciousness, quantum agentic ai, and  capabilities beyond what the code implements. Every claim is backed by running code and verifiable evidence.
 
 ---
 
-*DD7 International GmbH | Byron Callaghan (Lord B) + Jan Esderts*
+*DD7 International GmbH | Byron Callaghan + Malcom Carter + Jan Esderts | 
