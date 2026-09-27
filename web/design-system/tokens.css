@@ -1,0 +1,220 @@
+/* PyraClaw tokens — compiled from tokens.json. Themes: sovereign, minted (first is the default). */
+:root, [data-theme="sovereign"] {
+  --ui-stage: var(--ink);
+  --ui-panel: var(--panel-glass);
+  --ui-panel-raised: var(--panel-glass-2);
+  --ui-text: var(--chrome-3);
+  --ui-text-muted: var(--platinum-2);
+  --ui-text-dim: var(--platinum-1);
+  --ui-accent: var(--gold-3);
+  --ui-accent-alt: var(--steel-3);
+  --ui-accent-soft: var(--platinum-3);
+  --ui-rule: var(--hairline);
+  --ui-rule-strong: var(--hairline-2);
+  --ui-success: var(--signal-pass);
+  --ui-warning: var(--signal-warn);
+  --ui-danger: var(--signal-fail);
+  --ui-focus: var(--steel-3);
+  --ink: #040610;
+  --ink-2: #070b1a;
+  --ink-3: #0b1028;
+  --panel-glass: rgba(7,11,26,0.97);
+  --panel-glass-2: rgba(10,15,32,0.94);
+  --gold-1: #4a3008;
+  --gold-2: #9a7020;
+  --gold-3: #d4a840;
+  --gold-4: #f8e898;
+  --gold-5: #fffdf0;
+  --platinum-1: #507080;
+  --platinum-2: #90a0bc;
+  --platinum-3: #c8d4e8;
+  --platinum-4: #f2f6ff;
+  --chrome-1: #3a4a60;
+  --chrome-2: #8898b0;
+  --chrome-3: #d0dcf0;
+  --chrome-4: #ffffff;
+  --steel-1: #0a2850;
+  --steel-2: #2c64b8;
+  --steel-3: #7aaae8;
+  --steel-4: #c8deff;
+  --signal-pass: #00985a;
+  --signal-warn: #b87820;
+  --signal-fail: #b83030;
+  --hairline: rgba(160,180,220,0.09);
+  --hairline-2: rgba(160,180,220,0.16);
+  --hairline-gold: rgba(212,168,64,0.18);
+  --hairline-gold-strong: rgba(212,168,64,0.28);
+  --hairline-steel: rgba(44,100,184,0.20);
+  --hairline-steel-strong: rgba(44,100,184,0.32);
+  --hairline-pass: rgba(0,152,90,0.30);
+  --tint-gold-1: rgba(212,168,64,0.035);
+  --tint-gold-2: rgba(212,168,64,0.06);
+  --tint-steel-1: rgba(44,100,184,0.04);
+  --tint-steel-2: rgba(44,100,184,0.06);
+  --tint-white: rgba(255,255,255,0.015);
+  --tint-track: rgba(255,255,255,0.04);
+  --chain-near: #00c08b;
+  --chain-poly: #8247e5;
+  --chain-eth: #627eea;
+  --chain-bnb: #f3ba2f;
+  --mc-bg: #0a0f1a;
+  --mc-surface: #0f1525;
+  --mc-border: #1a2038;
+  --mc-text: #e2e8f0;
+  --mc-muted: #64748b;
+  --mc-green: #10b981;
+  --mc-cyan: #06b6d4;
+  --mc-purple: #7c3aed;
+  --mc-gold: #f59e0b;
+  --mc-red: #ef4444;
+  --mc-violet-light: #a78bfa;
+  --mc-green-light: #34d399;
+  --mc-hash: #94a3b8;
+  --mc-hash-dim: #475569;
+  --mc-evidence-bg: #050a08;
+  --mc-hash-bg: #080c14;
+  --tint-mc-green: rgba(16,185,129,0.08);
+  --tint-mc-green-2: rgba(16,185,129,0.20);
+  --tint-mc-purple: rgba(124,58,237,0.10);
+  --shadow-sphere: 0 14px 36px rgba(0,0,0,0.72), 0 5px 12px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.07);
+  --glow-pass: 0 0 4px #00985a;
+  --glow-gold: 0 0 4px #d4a840;
+  --glow-steel: 0 0 3px #7aaae8;
+  --glow-chain: 0 0 8px #00c08b;
+  --pulse-mc: 0 0 0 8px rgba(16,185,129,0);
+}
+[data-theme="minted"] {
+  --ui-stage: var(--mc-bg);
+  --ui-panel: var(--mc-surface);
+  --ui-panel-raised: var(--mc-surface);
+  --ui-text: var(--mc-text);
+  --ui-text-muted: var(--mc-muted);
+  --ui-text-dim: var(--mc-hash-dim);
+  --ui-accent: var(--mc-green);
+  --ui-accent-alt: var(--mc-cyan);
+  --ui-accent-soft: var(--mc-purple);
+  --ui-rule: var(--mc-border);
+  --ui-rule-strong: var(--mc-border);
+  --ui-success: var(--mc-green);
+  --ui-warning: var(--mc-gold);
+  --ui-danger: var(--mc-red);
+  --ui-focus: var(--mc-cyan);
+}
+:root {
+  --space-0: 5px;
+  --space-1: 8px;
+  --space-2: 12.8px;
+  --space-3: 16px;
+  --space-4: 19.2px;
+  --space-5: 25.6px;
+  --space-6: 28.8px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 56px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+  --radius-none: 0;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --radius-disc: 50%;
+  --container-max: 1480px;
+  --content-max: 1000px;
+  --hero-tagline-max: 780px;
+  --nav-height: 52px;
+  --rule: 1px;
+  --accent-rule: 4px;
+  --sphere-size: 82px;
+  --progress-track: 3px;
+  --console-height: 260px;
+  --agent-node-min: 1fr;
+  --metal-chrome: linear-gradient(175deg,#fff 0%,#eaf0ff 14%,#b8ccec 32%,#d8eaff 50%,#7090a8 66%,#c0d4ee 82%,#fff 100%);
+  --metal-gold: linear-gradient(175deg,#fef8c8 0%,#eecf50 18%,#d4a840 40%,#ecc858 58%,#987018 78%,#ecc040 100%);
+  --metal-platinum: linear-gradient(175deg,#f2f6ff 0%,#c8d4e8 28%,#8898b0 55%,#c0d0e8 78%,#f0f4ff 100%);
+  --metal-steel: linear-gradient(175deg,#d0e4ff 0%,#7aaae8 38%,#2c64b8 65%,#88b8f0 100%);
+  --sphere-gold: radial-gradient(circle at 34% 27%,#fffcea 0%,#f8d860 11%,#d4a840 27%,#a87820 47%,#6a4a10 67%,#30200a 87%);
+  --sphere-platinum: radial-gradient(circle at 34% 27%,#ffffff 0%,#eaf0ff 11%,#c0ccde 27%,#8090a8 47%,#4a5868 67%,#222e3c 87%);
+  --sphere-chrome: radial-gradient(circle at 34% 27%,#ffffff 0%,#eef4ff 11%,#b8cce4 27%,#7a90ac 47%,#485c74 67%,#202e40 87%);
+  --sphere-steel: radial-gradient(circle at 34% 27%,#dff0ff 0%,#a0c8ff 11%,#4a90e0 27%,#1e5cb0 47%,#0a3478 67%,#041a40 87%);
+  --sphere-ivory: radial-gradient(circle at 34% 27%,#ffffff 0%,#fef8ec 11%,#ead8b4 27%,#c0a070 47%,#806840 67%,#3c2c10 87%);
+  --metal-mc-green: linear-gradient(90deg,#10b981,#06b6d4);
+  --metal-mc-command: linear-gradient(90deg,#f59e0b,#7c3aed);
+  --metal-mc-evidence: linear-gradient(90deg,#a78bfa,#06b6d4);
+  --metal-mc-mesh: linear-gradient(90deg,#06b6d4,#7c3aed);
+  --stage-mc-hero: linear-gradient(135deg,#0d0722,#0a1628,#050c1a);
+  --font-display: 'Cinzel Decorative', serif;
+  --font-heading: 'Cinzel', serif;
+  --font-editorial: 'Cormorant Garamond', serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+}
+.display-hero { font-family: var(--font-display); font-size: 73.6px; font-weight: 900; line-height: 1.0; letter-spacing: 0.04em; }
+.display-title { font-family: var(--font-display); font-size: 38.4px; font-weight: 900; line-height: 1.1; letter-spacing: 0.05em; }
+.display-section { font-family: var(--font-display); font-size: 28.8px; font-weight: 900; line-height: 1.1; letter-spacing: 0.04em; }
+.display-brand { font-family: var(--font-display); font-size: 14.4px; font-weight: 900; letter-spacing: 0.22em; }
+.heading-section { font-family: var(--font-heading); font-size: 16px; font-weight: 700; letter-spacing: 0.12em; }
+.heading-card { font-family: var(--font-heading); font-size: 17.6px; font-weight: 900; letter-spacing: 0.12em; }
+.heading-caption { font-family: var(--font-heading); font-size: 14.4px; font-weight: 700; letter-spacing: 0.16em; }
+.heading-nav { font-family: var(--font-heading); font-size: 12.8px; font-weight: 400; letter-spacing: 0.2em; }
+.heading-tile { font-family: var(--font-heading); font-size: 11.52px; font-weight: 700; letter-spacing: 0.18em; }
+.heading-panel { font-family: var(--font-heading); font-size: 11.2px; font-weight: 400; letter-spacing: 0.25em; }
+.heading-chain { font-family: var(--font-heading); font-size: 11.2px; font-weight: 700; letter-spacing: 0.2em; }
+.editorial-tagline { font-family: var(--font-editorial); font-size: 21.6px; font-weight: 400; line-height: 1.75; }
+.editorial-quote { font-family: var(--font-editorial); font-size: 21.6px; font-weight: 400; line-height: 1.8; font-style: italic; }
+.editorial-sub { font-family: var(--font-editorial); font-size: 18.4px; font-weight: 400; line-height: 1.7; letter-spacing: 0.16em; font-style: italic; }
+.editorial-aside { font-family: var(--font-editorial); font-size: 16px; font-weight: 400; line-height: 1.8; font-style: italic; }
+.body-lead { font-family: var(--font-body); font-size: 13.12px; font-weight: 400; line-height: 1.75; }
+.body-card { font-family: var(--font-body); font-size: 12.8px; font-weight: 400; line-height: 1.7; }
+.body-copy { font-family: var(--font-body); font-size: 12.48px; font-weight: 400; line-height: 1.7; }
+.body-small { font-family: var(--font-body); font-size: 12px; font-weight: 400; line-height: 1.6; }
+.body-step-desc { font-family: var(--font-body); font-size: 10.88px; font-weight: 400; line-height: 1.5; }
+.label-sphere { font-family: var(--font-body); font-size: 9.12px; font-weight: 400; letter-spacing: 0.22em; }
+.label-stat { font-family: var(--font-body); font-size: 8.8px; font-weight: 400; letter-spacing: 0.18em; }
+.label-tile { font-family: var(--font-body); font-size: 8.64px; font-weight: 400; letter-spacing: 0.15em; }
+.label-cascade { font-family: var(--font-body); font-size: 8px; font-weight: 400; letter-spacing: 0.12em; }
+.num-hero { font-family: var(--font-mono); font-size: 48px; font-weight: 600; line-height: 1.0; }
+.num-display { font-family: var(--font-mono); font-size: 38.4px; font-weight: 600; line-height: 1.1; }
+.num-budget { font-family: var(--font-mono); font-size: 35.2px; font-weight: 600; line-height: 1.1; }
+.num-sphere { font-family: var(--font-mono); font-size: 24.8px; font-weight: 600; line-height: 1.1; }
+.num-stat { font-family: var(--font-mono); font-size: 22.4px; font-weight: 600; line-height: 1.1; }
+.num-tile { font-family: var(--font-mono); font-size: 20.8px; font-weight: 600; line-height: 1.1; }
+.num-kpi { font-family: var(--font-mono); font-size: 17.6px; font-weight: 600; line-height: 1.1; }
+.num-cascade { font-family: var(--font-mono); font-size: 14.4px; font-weight: 600; line-height: 1.1; }
+.num-bench { font-family: var(--font-mono); font-size: 13.6px; font-weight: 600; line-height: 1.2; }
+.mono-equation { font-family: var(--font-mono); font-size: 14.4px; font-weight: 400; line-height: 2.2; letter-spacing: 0.04em; }
+.mono-console { font-family: var(--font-mono); font-size: 10.56px; font-weight: 400; line-height: 1.65; }
+.mono-code { font-family: var(--font-mono); font-size: 10.4px; font-weight: 400; line-height: 1.9; }
+.mono-table { font-family: var(--font-mono); font-size: 10.08px; font-weight: 400; }
+.mono-table-head { font-family: var(--font-mono); font-size: 8px; font-weight: 400; letter-spacing: 0.12em; }
+.mono-audit { font-family: var(--font-mono); font-size: 9.12px; font-weight: 400; }
+.mono-footer { font-family: var(--font-mono); font-size: 8.8px; font-weight: 400; line-height: 2.2; }
+.label-eyebrow { font-family: var(--font-mono); font-size: 9.6px; font-weight: 400; letter-spacing: 0.26em; }
+.label-status { font-family: var(--font-mono); font-size: 9.28px; font-weight: 600; letter-spacing: 0.14em; }
+.label-api { font-family: var(--font-mono); font-size: 8.96px; font-weight: 400; letter-spacing: 0.14em; }
+.label-section-num { font-family: var(--font-mono); font-size: 8.8px; font-weight: 400; letter-spacing: 0.2em; }
+.label-chip { font-family: var(--font-mono); font-size: 8.8px; font-weight: 400; letter-spacing: 0.08em; }
+.label-pill { font-family: var(--font-mono); font-size: 8.64px; font-weight: 400; letter-spacing: 0.12em; }
+.label-nav { font-family: var(--font-mono); font-size: 8.48px; font-weight: 400; letter-spacing: 0.07em; }
+.label-meta { font-family: var(--font-mono); font-size: 8.32px; font-weight: 400; letter-spacing: 0.12em; }
+.label-tag { font-family: var(--font-mono); font-size: 8px; font-weight: 400; letter-spacing: 0.1em; }
+.label-badge { font-family: var(--font-mono); font-size: 7.36px; font-weight: 400; letter-spacing: 0.1em; }
+.mc-hero { font-family: var(--font-sans); font-size: 48px; font-weight: 700; line-height: 1.2; }
+.mc-h2 { font-family: var(--font-sans); font-size: 28.8px; font-weight: 700; line-height: 1.2; }
+.mc-lead { font-family: var(--font-sans); font-size: 19.2px; font-weight: 400; line-height: 1.5; }
+.mc-body { font-family: var(--font-sans); font-size: 16px; font-weight: 400; line-height: 1.8; }
+.mc-cta { font-family: var(--font-sans); font-size: 14.4px; font-weight: 700; }
+.mc-card-title { font-family: var(--font-sans); font-size: 13.6px; font-weight: 600; letter-spacing: 0.08em; }
+.mc-card-body { font-family: var(--font-sans); font-size: 13.6px; font-weight: 400; line-height: 1.6; }
+.mc-seal { font-family: var(--font-sans); font-size: 13.6px; font-weight: 700; }
+.mc-badge { font-family: var(--font-sans); font-size: 12.8px; font-weight: 600; }
+.mc-label-caps { font-family: var(--font-sans); font-size: 12.8px; font-weight: 400; letter-spacing: 0.1em; }
+.mc-step-label { font-family: var(--font-sans); font-size: 12.8px; font-weight: 600; }
+.mc-footer { font-family: var(--font-sans); font-size: 11.52px; font-weight: 400; }
+.mc-num-compare { font-family: var(--font-mono); font-size: 40px; font-weight: 700; line-height: 1.2; }
+.mc-num-step { font-family: var(--font-mono); font-size: 32px; font-weight: 700; line-height: 1.2; }
+.mc-pyramid { font-family: var(--font-mono); font-size: 12.8px; font-weight: 400; line-height: 2.2; }
+.mc-hash { font-family: var(--font-mono); font-size: 12px; font-weight: 400; line-height: 2.0; }
+.mc-evidence { font-family: var(--font-mono); font-size: 11.52px; font-weight: 400; line-height: 2.2; }
